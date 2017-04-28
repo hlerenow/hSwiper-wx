@@ -1,0 +1,17 @@
+/**app.wxss**/
+div{
+  display:block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+page{
+  font-family: "Microsoft YaHei";  
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;  
+  position: relative;
+}

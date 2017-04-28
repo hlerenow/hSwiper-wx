@@ -1,0 +1,48 @@
+<template name="hSwiperItem">
+	<view class="itemSelf">
+	  <view class="imgContent">
+	      <image  model="aspectFit" src="{{item.pic}}"></image>
+	  </view>
+	  <view class="albumInfo">
+	      <view class="tags">专辑：{{item.aldum}}</view>
+	      <view class="title">{{item.title}}</view>
+	      <view class="others"># {{item.author}}</view>
+	  </view>  	  
+	  <view class="playerBtnCon">
+	  		<view class="playerBtnConBg">
+	      		<text  hidden="{{item.state}}" catchtap="play" 
+	      			 data-songid="{{item.id}}" 
+	      			 data-index="{{index}}" 
+	      			 class=" playerBtn ion-ios-play"
+	      			 ></text>
+	      		<text hidden="{{!item.state}}" catchtap="pause" 
+	      			 data-songid="{{item.id}}" 
+	      			 data-index="{{index}}" 
+	      			 class=" playerBtn ion-ios-pause"
+	      			 ></text>   	      			      			  			
+	  		</view>
+	  </view>
+	</view>
+	<view class="hTimeBar">
+		    <div animation="{{item.itemAnimation}}" class="hTimeBarFg"></div>
+	</view>		
+</template>
+
+<template name="hSwiperItem2">
+	<view class="itemSelf">
+	  <view class="imgContent">
+	      <image  model="aspectFit" src="http://p4.music.126.net/AalJ1VUlHc960j-Socno2Q==/18876415625750995.jpg"></image>
+	  </view>
+	  <view class="albumInfo">
+	      <view class="tags">我的.它的</view>
+	      <view class="title">精品‖国风电音‖地名带你走遍中华万里江山</view>
+	      <view class="others">#中世纪穿行者.2017-03-38</view>
+	  </view>
+	  <view class="playerBtnCon">
+	      <text class=" playerBtn ion-android-arrow-dropright-circle"></text>
+	  </view>
+	</view>  
+</template>
+<template name="b">
+	{{item}}
+</template>

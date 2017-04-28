@@ -1,0 +1,23 @@
+@import "../../component/hSwiper/hSwiper.wxss";
+
+
+/*滚动图*/
+#mainContainer{
+	height: 100%;
+	width: 100%;
+}
+
+.itemSelf{
+	height: 100%;
+	position: absolute;
+	box-sizing:border-box;
+	margin:10rpx;
+	overflow: hidden;
+	padding: 10rpx;
+	box-shadow: 0 0 1px 1px rgba(0,0,0,0.1);
+	height: 95%;
+	width: 96%;
+	background-color: gray;
+	color: white;
+}
+

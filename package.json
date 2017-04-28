@@ -1,0 +1,11 @@
+{
+  "name": "hswiper",
+  "version": "1.0.0",
+  "description": "\"微信小程序滚动图插件\"",
+  "main": "hSwiper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "HL",
+  "license": "ISC"
+}

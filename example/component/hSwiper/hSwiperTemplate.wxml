@@ -1,0 +1,9 @@
+<template name="hSwiperItem">
+	<view class="itemSelf">
+    	{{item}}
+	</view>	
+</template>
+
+<template name="templateb">
+	{{item}}
+</template>

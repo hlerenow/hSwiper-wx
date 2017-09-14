@@ -166,19 +166,23 @@ var swiper=new hSwiper({
 
     用于指定元素内容定制的模版名，默认为 'hSwiperItem'，用户可以在hSwiperTemplate.wxml里面自定模版,然后在此处配置响应的模版,每个模版会注入item，index（参照上面hSwiperTemplate.wxml的解释）等数据。
 
-#### 接口
+#### 接口方法
 
 * getList()
+    - 描述
 
-    返回传入的数据数组
+        返回传入的数据数组
 
 * updateList(newList)
+    - 描述
 
-    更新数据数据,传入一个新的数据数组，替换旧的的数据
+        更新数据数据,传入一个新的数据数组，替换旧的的数据  
 
 * preView()
 
-    向左跳转一个视图
+    - 描述
+
+        向左跳转一个视图    
 
 * nextView()
 
@@ -186,23 +190,113 @@ var swiper=new hSwiper({
 
 * getNowView()
 
-    获取当前视图的索引,从左往右，从0开始（视图对应数据的的索引）
+    - 描述
+
+        获取当前视图的索引,从左往右，从0开始（视图对应数据的的索引）
+        
+    - 返回值说明
+
+        - index 
+
+            类型：Number
+
 
 * moveViewTo(index)
+    - 描述
 
-    跳转到指定的视图
+        传入视图索引，跳转到指定的视图
 
-#### 事件
+    - 参数说明
 
-    item,index为当前视图的数据，以及索引
+        - index
+            类型： Number
 
-* onFirstView(callback(item,index)) 跳转到第一个视图时触发
 
-* onLastView(callback(item,index)) 跳转到最后一个视图时触发
+    
+#### 事件方法
 
-* afterViewChange(callback(item,index)) 视图跳转前触发
 
-* beforeViewChange(callback(item,index)) 视图跳转后触发
+> item(一个Object),index(umber)为当前视图的数据，以及索引
+
+
+* onFirstView(callback(item,index)) 
+
+    - 描述
+
+        回调函数, 跳转到第一个视图时触发
+    - 参数说明
+
+        - item
+            类型： Object
+
+        - index
+            类型： Number
+
+        - callback 
+
+            类型： Function
+
+
+
+
+* onLastView(callback(item,index))
+    - 描述
+
+        跳转到最后一个视图时触发, 跳转到第一个视图时触发
+
+    - 参数说明
+
+        - item
+            类型： Object
+
+        - index
+            类型： Number
+
+        - callback 
+
+            类型： Function
+
+
+
+
+* afterViewChange(callback(item,index)) 
+    - 描述
+
+        视图跳转前触发, 跳转到第一个视图时触发
+
+    - 参数说明
+
+        - item
+            类型： Object
+
+        - index
+            类型： Number
+
+        - callback 
+
+            类型： Function
+
+
+
+
+* beforeViewChange(callback(item,index)) 
+    - 描述
+
+        视图跳转后触发, 跳转到第一个视图时触发
+
+    - 参数说明
+
+        - item
+            类型： Object
+
+        - index
+            类型： Number
+
+        - callback 
+
+            类型： Function
+
+
 
 
 ### 具体使用 可查看example文件夹下的例子，有注释说明。欢迎提问！！！

@@ -307,10 +307,10 @@ class hSwiper{
 
 	nextView(){
 		// console.log("跳转下一个视图");
+		// 兼容用户跳转视图时，传入字符索引， 如 '1' ,注意这不是bug，只是为了兼容用户 函数调用时 没用传入正确的参数
+		var index = parseInt(this.nowView) + 1;
 
-		var index=this.nowView+1;
-
-		index=index>(this.data.list.length-1)?this.data.list.length-1:index;
+		index = index > (this.data.list.length-1) ? this.data.list.length-1 : index;
 		this.nowView=index;
 		this.moveViewTo(index);
 		// console.log("切换到页",this.nowView);

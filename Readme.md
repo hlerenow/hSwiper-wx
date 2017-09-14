@@ -169,11 +169,13 @@ var swiper=new hSwiper({
 #### 接口方法
 
 * getList()
+
     - 描述
 
         返回传入的数据数组
 
 * updateList(newList)
+
     - 描述
 
         更新数据数据,传入一个新的数据数组，替换旧的的数据  
@@ -185,6 +187,8 @@ var swiper=new hSwiper({
         向左跳转一个视图    
 
 * nextView()
+
+    - 描述
 
     向右跳转一个视图
 
@@ -224,6 +228,7 @@ var swiper=new hSwiper({
     - 描述
 
         回调函数, 跳转到第一个视图时触发
+        
     - 参数说明
 
         - item

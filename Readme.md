@@ -188,9 +188,9 @@ var swiper=new hSwiper({
 
 * nextView()
 
-    - 描述
-
-    向右跳转一个视图
+    - 描述
+    
+        向右跳转一个视图
 
 * getNowView()
 

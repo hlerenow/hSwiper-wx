@@ -247,7 +247,7 @@ var swiper=new hSwiper({
 * onLastView(callback(item,index))
     - 描述
 
-        跳转到最后一个视图时触发, 跳转到第一个视图时触发
+       回调函数， 跳转到最后一个视图时触发
 
     - 参数说明
 

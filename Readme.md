@@ -267,7 +267,7 @@ var swiper=new hSwiper({
 * afterViewChange(callback(item,index)) 
     - 描述
 
-        视图跳转前触发, 跳转到第一个视图时触发
+        视图跳转后触发
 
     - 参数说明
 
@@ -287,7 +287,7 @@ var swiper=new hSwiper({
 * beforeViewChange(callback(item,index)) 
     - 描述
 
-        视图跳转后触发, 跳转到第一个视图时触发
+        视图跳转前触发
 
     - 参数说明
 

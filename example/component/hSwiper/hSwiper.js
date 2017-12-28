@@ -282,7 +282,7 @@ class hSwiper{
 	 * @return {[type]} [description]
 	 */
 	getNowView(){
-		var maxIndex=this.data.length-1;
+		var maxIndex=this.data.list.length-1;
 
 		var indexView=Math.abs(Math.round(this.nowTranX/this.itemWidth));
 

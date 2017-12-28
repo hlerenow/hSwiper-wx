@@ -238,6 +238,11 @@ class hSwiper{
 	 * @return {[type]} [description]
 	 */
 	moveViewTo (viewIndex) {
+		// 如果将要跳转的视图和当前视图一致， 则不跳转
+ 		if (viewIndex === this.nowView) {
+ 			return;
+ 		}
+
 		this.beforeViewChange(this.data.list[this.nowView],this.nowView);
 		this.nowView = viewIndex;
 
@@ -262,7 +267,7 @@ class hSwiper{
 	 * @return {[type]} [description]
 	 */
 	getNowView (){
-		var maxIndex = this.data.list.length - 1;
+		var maxIndex = this.data.list.length-1;
 
 		var indexView = Math.abs(Math.round(this.nowTranX / this.itemWidth));
 
@@ -310,9 +315,8 @@ class hSwiper{
 	}
 
 	getList () {
-		/* 保持插件内部 list 变量 和 data 下的 list 变量 一致  */
-		this.data.list = this.pageCtx.data[this.DataVarName].list;
-		return this.data.list;
+		console.log(this.pageCtx)
+		return this.pageCtx.data[this.DataVarName].list;
 	}
 }
 

@@ -1,4 +1,4 @@
-## 微信小程序 滚动插件 xHSwiper
+## 微信小程序 滚动插件 hSwiper
 
 #### 需求描述
 * 传入一个数组元素，每个元素就是对应的视图应该有的数据
@@ -28,46 +28,43 @@
 
 #### index.js
 ```
-const hSwiper=require("../../component/hSwiper/hSwiper.js");
-var option={
-    data:{
+const hSwiper = require('../../component/hSwiper/hSwiper.js');
+var option = {
+    data: {
         //swiper插件变量
-        hSwiperVar:{}
+        hSwiperVar: {}
     },
-    onLoad:function(){
+    onLoad: function () {
     },
-    onReady:function(){
-        //实例化插件
-        var swiper=new hSwiper({reduceDistance:60,varStr:"hSwiperVar",list:[1,2,3,4,5]});
-
-        swiper.onFirstView=function(data,index){
-            console.log("当前是第"+(index+1)+"视图","数据是："+data);
+    onReady: function() {
+        var swiper = new hSwiper({reduceDistance: 60, varStr: 'hSwiperVar', list: [1,2,3,4,5]});
+        swiper.onFirstView = function (data, index) {
+            console.log('当前是第' + (index + 1) + '视图', '数据是'+data);
         };
-        swiper.onLastView=function(data,index){
-            console.log("当前是第"+(index+1)+"视图","数据是："+data);
+        swiper.onLastView = function (data, index) {
+            console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
         };
-        swiper.afterViewChange=function(data,index){
-            console.log("当前是第"+(index+1)+"视图","数据是："+data);         
+        swiper.afterViewChange = function (data, index) {
+            console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
         };
-        swiper.beforeViewChange=function(data,index){
-            console.log("当前是第"+(index+1)+"视图","数据是："+data);
+        swiper.beforeViewChange = function (data, index) {
+            console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
         };
 
-        //更新数据 
+        //更新数据
         setTimeout(()=>{
-            console.log("3 s 后更新列表数据");
+            console.log('3 s 后更新列表数据');
             //3 s 后更新列表数据
             this.setData({
-                "hSwiperVar.list[0]":"修改"
+                'hSwiperVar.list[0]': '修改'
             });
         }, 3000);
 
         setTimeout(()=>{
-            console.log("5s后更新数据 并且更新视图");
-            
+            console.log('5s后更新数据 并且更新视图');
             //5s后更新数据 并且更新视图
-            var oldList=swiper.getList();
-            swiper.updateList(oldList.concat([11,23,45]));          
+            var oldList = swiper.getList();
+            swiper.updateList(oldList.concat([11,23,45]));
         }, 5000);
     }
 };
@@ -134,10 +131,10 @@ Page(option);
 #### hSwiper入口参数解释
 
 ```
-var swiper=new hSwiper({
-    reduceDistance:60,
-    varStr:"hSwiperVar",
-    list:[1,2,3,4,5]
+var swiper = new hSwiper({
+    reduceDistance: 60,
+    varStr: 'hSwiperVar',
+    list: [1,2,3,4,5]
 });
 
 ```
@@ -152,7 +149,7 @@ var swiper=new hSwiper({
  
     **类型： String**
 
-    该参数用于插件操作data下的的数据，是一个data下的变量名的字符串，参考我们的例子index.js,比如 我们这里将 ***hSwiperVar*** 变量的控制权 交给 插件，那么 ***varStr="hSwiperVar"*** 
+    该参数用于插件操作data下的的数据，是一个data下的变量名的字符串，参考我们的例子index.js,比如 我们这里将 ***hSwiperVar*** 变量的控制权 交给 插件，那么 ***varStr = 'hSwiperVar'*** 
     
 * list 
 

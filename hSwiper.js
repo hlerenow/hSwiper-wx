@@ -17,28 +17,28 @@ class hSwiper{
 
 		props = props || {};
 
-		//获得当前Page上下文
+		// 获得当前Page上下文
 		const pages = getCurrentPages();
 
 		this.pageCtx = pages[pages.length - 1];
-		//当前hSwiperId
+		// 当前hSwiperId
 		this.id = _hSwiperId ++;
 
 		//获取可用屏幕宽度
 		this.screenWidth = wx.getSystemInfoSync().windowWidth;
 
-		//使用的视图item模版命名
+		// 使用的视图item模版命名
 		this.templateName = props.templateName||"hSwiperItem";
 
-		//代理的data变量,必要,并且为一级变量
+		// 代理的data变量,必要,并且为一级变量
 		this.DataVarName = props.varStr;
 
-		//代理滚动容器style属性的变量名
+		// 代理滚动容器style属性的变量名
 		this.wrapperStyle = 'hSwiperConStyle'+this.id;
 
 		this.pageCtx.data[this.DataVarName] = this.pageCtx.data[this.DataVarName] || {};
 
-		//获取page的data代理的变量
+		// 获取page的data代理的变量
 		this.data = this.pageCtx.data[this.DataVarName];
 
 		this.data.id = this.id;
@@ -53,23 +53,23 @@ class hSwiper{
 
 		this.data.itemStyle = '';
 
-		//视图元素对应的数据
+		// 视图元素对应的数据
 		this.data.list = props.list || [];
 
 		this.data.swiperAnmiation = {};
 
-		//当前视图位置
+		// 当前视图位置
 		this.nowTranX = 0;
-		//当前是第几个视图
+		// 当前是第几个视图
 		this.nowView = 0;
 
-		//用于计算每个视图元素的宽度 itemAllWidth = windosWidth - reduceDistance;
+		// 用于计算每个视图元素的宽度 itemAllWidth = windosWidth - reduceDistance;
 		this.reduceDistance = parseInt(props.reduceDistance)||0;
 
-		//每个视图元素的宽度
+		// 每个视图元素的宽度
 		this.itemWidth = parseInt(props.itemWidth || (this.screenWidth - this.reduceDistance));
 
-		//视图过度动画实例
+		// 视图过度动画实例
 		this.viewAnimation=wx.createAnimation({
 			transformOrigin: '50% 50%',
 			duration: 300,
@@ -77,7 +77,7 @@ class hSwiper{
 			delay: 0
 		});
 
-		//视图移动动画实例
+		// 视图移动动画实例
 		this.moveAnimation = wx.createAnimation({
 			transformOrigin: '50% 50%',
 			duration: 0,
@@ -85,16 +85,16 @@ class hSwiper{
 			delay: 0
 		});
 
-		//和触摸事件相关的属性
+		// 和触摸事件相关的属性
 		this.startPos = this.endPos = 0;
 
-		//注册事件
+		// 注册事件
 		this.registerEvent();
 
-		//初始化代理数据变量的结构,只能初始化时调用,否侧此方法可能会出现bug
+		// 初始化代理数据变量的结构,只能初始化时调用,否侧此方法可能会出现bug
 		this.initData();
 
-		//计算结构
+		// 计算结构
 		this.initStruct();
 
 		this.moveViewTo(0);
@@ -103,7 +103,7 @@ class hSwiper{
 
 	initStruct () {
 		var count = this.data.list.length;
-		//更新容器的宽度，默认
+		// 更新容器的宽度，默认
 		this.updateConStyle('width', count * this.itemWidth + 'px');
 		this.updateItemStyle('width', this.itemWidth + 'px');
 	}
@@ -117,7 +117,7 @@ class hSwiper{
 	}
 
 
-	//同步数据到视图
+	// 同步数据到视图
 	updateData (varStr, value) {
 		var temp = {};
 
@@ -158,28 +158,28 @@ class hSwiper{
 		});
 		return styleObj;
 	}
-	//注册一些触摸事件，挂载到page下面
+	// 注册一些触摸事件，挂载到page下面
 	registerEvent () {
 		var self = this;
-		//触摸开始事件
+		// 触摸开始事件
 		this.pageCtx['swiperTouchstart' + this.id] = function (e) {
 			// console.log("触摸开始");
 			self.startPos = e.changedTouches[0].clientX;
 			self.touchTime = e.timeStamp;
 		};
 
-		//触摸移动中的事件
+		// 触摸移动中的事件
 		this.pageCtx['swiperTouchmove' + this.id] = function (e) {
 			self.endPos = e.changedTouches[0].clientX;
 			self.movePos(self.endPos - self.startPos);
 		};
 
-		//触摸结束事件
+		// 触摸结束事件
 		this.pageCtx['swiperTouchend' + this.id] = function (e) {
 			// console.log("触摸结束");
 			var times = e.timeStamp - self.touchTime,
 					distance = Math.abs(e.changedTouches[0].clientX - self.startPos);
-			//判断
+			// 判断
 			if (times < 500 && distance > 1) {
 				if (!((e.changedTouches[0].clientX - self.startPos) > 0)) {
 					self.nextView();
@@ -196,7 +196,7 @@ class hSwiper{
 		};
 	}
 
-	//初始化数据
+	// 初始化数据
 	initData () {
 		var temp = {};
 		temp[this.DataVarName] = this.data;
@@ -298,7 +298,7 @@ class hSwiper{
 	}
 
 	updateList (list) {
-		//更新list
+		// 更新list
 		this.data.list = list;
 		this.updateData('list', list);
 		this.initStruct();

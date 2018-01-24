@@ -1,6 +1,6 @@
 {
   "name": "hswiper",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "\"微信小程序滚动图插件\"",
   "main": "hSwiper.js",
   "scripts": {

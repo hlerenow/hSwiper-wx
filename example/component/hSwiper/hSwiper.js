@@ -70,7 +70,7 @@ class hSwiper{
 		this.itemWidth = parseInt(props.itemWidth || (this.screenWidth - this.reduceDistance));
 
 		//视图过度动画实例
-		this.viewAnimation=wx.createAnimation({
+		this.viewAnimation = wx.createAnimation({
 			transformOrigin: '50% 50%',
 			duration: 300,
 			timingFunction: 'ease',
@@ -237,12 +237,30 @@ class hSwiper{
 	 * 移动到指定视图，以视图的宽度为单位
 	 * @return {[type]} [description]
 	 */
-	moveViewTo (viewIndex) {
+	/**
+	 * 移动到指定视图，以视图的宽度为单位
+	 * @param  {number}  viewIndex    视图数组下表
+	 * @param  {Boolean} useAnimation 是否启用过渡动画, 默认启用
+	 * @return {[type]}               [description]
+	 */
+	moveViewTo (viewIndex, useAnimation = true) {
 		this.beforeViewChange(this.data.list[this.nowView],this.nowView);
 		this.nowView = viewIndex;
-
 		this.nowTranX = - (this.itemWidth) * viewIndex + this.reduceDistance / 2;
-		this.updateViewAnimation(this.nowTranX);
+
+		/* 是否启用动画过渡 */
+		if (useAnimation)  {
+			this.updateViewAnimation(this.nowTranX);			
+		} else {
+			let animation = wx.createAnimation({
+				transformOrigin: '50% 50%',
+				duration: 0,
+				timingFunction: 'linear',
+				delay: 0
+			});
+			animation.translateX(this.nowTranX).translate3d(0).step();
+			this.updateData('swiperAnmiation', animation.export());
+		}
 
 		this.afterViewChange(this.data.list[this.nowView],this.nowView);
 

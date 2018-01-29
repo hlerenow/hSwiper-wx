@@ -19,7 +19,7 @@ var option = {
 		};
 		swiper.beforeViewChange = function (data, index) {
 			console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
-		};    
+		};
 		//更新数据
 		setTimeout(()=>{
 			console.log('3 s 后更新列表数据');
@@ -35,6 +35,16 @@ var option = {
 			var oldList = swiper.getList();
 			swiper.updateList(oldList.concat([11,23,45]));
 		}, 5000);
+
+		setTimeout(()=>{
+			console.log('7s后移动试图，有过渡效果');
+			swiper.moveViewTo(1);
+		}, 7000);
+
+		setTimeout(()=>{
+			console.log('8s后移动试图，无过渡效果');
+			swiper.moveViewTo(2, false);
+		}, 8000);
 	}
 };
 

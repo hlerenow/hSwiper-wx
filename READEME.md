@@ -217,7 +217,7 @@ var swiper = new hSwiper({
 #### 事件方法
 
 
-> item(一个Object),index(umber)为当前视图的数据，以及索引
+> item(一个Object),index(number)为当前视图的数据，以及索引
 
 
 * onFirstView(callback(item,index)) 

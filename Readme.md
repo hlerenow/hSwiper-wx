@@ -213,9 +213,12 @@ var swiper = new hSwiper({
             类型： Number
         
         - useAnimation
+        
             作用： 设置为 ```true```  时，无过渡动画效果，可用于制作循环播放效果
+            
             类型： Boolean
-            默认值： false，
+            
+            默认值： false
 
     
 #### 事件方法

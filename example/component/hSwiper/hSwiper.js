@@ -132,7 +132,6 @@ class hSwiper{
 	}
 
 	updateConStyle (attr, value) {
-    console.log(this.data.wrapperStyleValue[this.wrapperStyle]);
 		var tempWidth = this.parseStyle(this.data.wrapperStyleValue[this.wrapperStyle]) || '';
 		tempWidth[attr] = value;
 		this.data.wrapperStyleValue[this.data.wrapperStyle] = this.styleStringify(tempWidth);
@@ -149,7 +148,6 @@ class hSwiper{
 		var styleObj = {};
 		var styleArray = styleStr.split(';');
 
-    console.log(styleStr);
 		styleArray = styleArray.map(function (item) {
 			var temp = item.split(':');
 			if (temp.length === 2) {

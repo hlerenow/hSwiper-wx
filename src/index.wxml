@@ -1,1 +1,18 @@
-<view class="index">{{prop}}</view>
+<import src="/hSwiper/swiperTemplate.wxml"/>
+
+<view class="hSwiper"
+  bindtouchstart="touchstart"
+  bindtouchmove="touchmove"
+  bindtouchend="touchend"
+>
+  <view class="hSwiperCon"
+        animation="{{swiperAnmiation}}"
+        style="{{wrapperStyleValue[wrapperStyle]}}" >
+        <block wx:for="{{list}}" wx:key="index" >
+            <view class="item" style="{{itemStyle}}">
+                <template is="{{templateName}}" data="{{item,index}}"></template>
+            </view>
+        </block>
+  </view>
+</view>
+

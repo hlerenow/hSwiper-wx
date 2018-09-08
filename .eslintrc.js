@@ -21,6 +21,9 @@ module.exports = {
     'promise'
   ],
   'rules': {
+    'prefer-const': 'off',
+    'no-debugger': 'off',
+    'no-console': 'off',
     'arrow-parens': 'off',
     'comma-dangle': [
       'error',
@@ -92,5 +95,6 @@ module.exports = {
     'Behavior': true,
     'wx': true,
     'getCurrentPages': true,
+    'debugger': true
   }
 }

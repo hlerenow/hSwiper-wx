@@ -1,315 +1,121 @@
-## 微信小程序 滚动插件 hSwiper
+# miniprogram-custom-component
 
-#### 需求描述
-* 传入一个数组元素，每个元素就是对应的视图应该有的数据
-* 跟随手指滑动,手指滑动结束后，智能判断当前视图是第几个视图，并且将当前视图显示在屏幕中央,支持纵向滚动即可
-* 每个视图的宽度可控
-* 提供每次滑动结束后的事件
-* 提供滑动到第一个视图的事件，并提供当前是第几个视图，对应的视图数据
-* 提供滑动到最后个视图的事件，并提供当前是第几个视图，对应的视图数据
-* 动态的 添加/删除 视图元素，
-* 每个视图的内容可以通过模版定制定制，并提供当前是第几个视图，对应的视图数据
+小程序自定义组件脚手架
 
-#### 演示
+## 开发
 
-![](./whsiper.gif)
-
-##### 文件介绍
-```
-    hSwiper.js //插件的核心文件
-    hSwiper.wxml //插件的dom结构
-    hSwiper.wxss   //插件的css
-    hSwiperTemplate.wxml //插件每个元素的模版    
-```
-
-#### 使用方法
-
-下载本插件,在需要使用的page的相关位置导入对应的hSwiper.js,hSwiper.wxss以及hSwiper.wxml即可，具体使用如下
-
-#### index.js
-```
-const hSwiper = require('../../component/hSwiper/hSwiper.js');
-var option = {
-    data: {
-        //swiper插件变量
-        hSwiperVar: {}
-    },
-    onLoad: function () {
-    },
-    onReady: function() {
-        var swiper = new hSwiper({reduceDistance: 60, varStr: 'hSwiperVar', list: [1,2,3,4,5]});
-        swiper.onFirstView = function (data, index) {
-            console.log('当前是第' + (index + 1) + '视图', '数据是'+data);
-        };
-        swiper.onLastView = function (data, index) {
-            console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
-        };
-        swiper.afterViewChange = function (data, index) {
-            console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
-        };
-        swiper.beforeViewChange = function (data, index) {
-            console.log('当前是第' + (index + 1) + '视图', '数据是：' + data);
-        };
-
-        //更新数据
-        setTimeout(()=>{
-            console.log('3 s 后更新列表数据');
-            //3 s 后更新列表数据
-            this.setData({
-                'hSwiperVar.list[0]': '修改'
-            });
-        }, 3000);
-
-        setTimeout(()=>{
-            console.log('5s后更新数据 并且更新视图');
-            //5s后更新数据 并且更新视图
-            var oldList = swiper.getList();
-            swiper.updateList(oldList.concat([11,23,45]));
-        }, 5000);
-    }
-};
-
-Page(option);
-```
-
-#### index.wxml
+1. 安装依赖：
 
 ```
-<import src="../../component/hSwiper/hSwiper.wxml"/>
-
-<view id="mainContainer">
-    <template is="hSwiper" data="{{...hSwiperVar}}"></template>
-</view>
-
+npm install
 ```
 
-#### index.wxss
+2. 执行命令：
 
 ```
-@import "../../component/hSwiper/hSwiper.wxss";
-
-
-/*滚动图*/
-#mainContainer{
-    height: 100%;
-    width: 100%;
-}
-
-.itemSelf{
-    height: 100%;
-    position: absolute;
-    box-sizing:border-box;
-    margin:10rpx;
-    overflow: hidden;
-    padding: 10rpx;
-    box-shadow: 0 0 1px 1px rgba(0,0,0,0.1);
-    height: 95%;
-    width: 96%;
-    background-color: gray;
-    color: white;
-}
-
-
+npm run dev
 ```
 
-#### hSwiperTemplate.wxml (hswiper视图元素模版)
-
-每个视图的内容的wxml都写在该文件里面，使用 template标签 ，并且命名 ,当调用这里面的模版时，会自动注入 item以及 index数据，index表示是当前元素的元素索引 ，item则表示当前元素 数据。（相当于list[index]=item，但是 list不会注入到模版里面）
+默认会在包根目录下生成 miniprogram\_dev 目录，src 中的源代码会被构建并生成到 miniprogram\_dev/components 目录下。如果需要监听文件变化动态构建，则可以执行命令：
 
 ```
-<template name="hSwiperItem">
-    <view class="itemSelf">
-        {{item}}
-    </view> 
-</template>
-
-<template name="templateb">
-    {{item}}
-</template>
+npm run watch
 ```
 
-#### hSwiper入口参数解释
+> ps: 如果 minirpogram\_dev 目录下已存在小程序 demo，执行`npm run dev`则不会再将 tools 下的 demo 拷贝到此目录下。而执行`npm run watch`则会监听 tools 目录下的 demo 变动并进行拷贝。
+
+3. 生成的 miniprogram\_dev 目录是一个小程序项目目录，以此目录作为小程序项目目录在开发者工具中打开即可查看自定义组件被使用的效果。
+
+4. 进阶：
+
+* 如果有额外的构建需求，可自行修改 tools 目录中的构建脚本。
+* 内置支持 less、sourcemap 等功能，默认关闭。如若需要可以自行修改 tools/config.js 配置文件中相关配置。
+* 内置支持多入口构建，如若需要可自行调整 tools/config.js 配置文件的 entry 字段。
+* 默认开启 eslint，可自行调整规则或在 tools/config.js 中注释掉 eslint-loader 行来关闭此功能。
+
+## 发布
+
+> ps: 发布前得确保已经执行构建，小程序 npm 包只有构建出来的目录是真正被使用到的。
+
+1. 如果还没有 npm 帐号，可以到[ npm 官网](https://www.npmjs.com/)注册一个 npm 帐号。
+2. 在本地登录 npm 帐号，在本地执行：
 
 ```
-var swiper = new hSwiper({
-    reduceDistance: 60,
-    varStr: 'hSwiperVar',
-    list: [1,2,3,4,5]
-});
-
+npm adduser
 ```
 
-* reduceDistance 
+或者
 
-    **类型： Number**
+```
+npm login
+```
 
-    该参数用于确定每个滚动元素的的宽度，每个元素的宽度为屏宽-reduceDistance，但是没有配置高度，所以高度需要 用户自己使用css设置
+3. 在已完成编写的 npm 包根目录下执行：
 
-* varStr (String)
- 
-    **类型： String**
+```
+npm publish
+```
 
-    该参数用于插件操作data下的的数据，是一个data下的变量名的字符串，参考我们的例子index.js,比如 我们这里将 ***hSwiperVar*** 变量的控制权 交给 插件，那么 ***varStr = 'hSwiperVar'*** 
-    
-* list 
+到此，npm 包就成功发布到 npm 平台了。
 
-    **类型： Array**
+> PS：一些开发者在开发过程中可能修改过 npm 的源，所以当进行登录或发布时需要注意要将源切回 npm 的源。
 
-    该参数与用于初始化时传入数据
+## 目录结构
 
-* templateName
+以下为推荐使用的目录结构，如果有必要开发者也可以自行做一些调整:
 
-    **类型： String**
+```
+|--miniprogram_dev // 开发环境构建目录
+|--miniprogram_dist // 生产环境构建目录
+|--src // 源码
+|   |--common // 通用 js 模块
+|   |--components // 通用自定义组件
+|   |--images // 图片资源
+|   |--wxml // 通用 wxml 模版资源
+|   |--wxs // 通用 wxs 资源
+|   |--wxss // 通用 wxss 资源
+|   |
+|   |--xxx.js/xxx.wxml/xxx.json/xxx.wxss // 暴露的 js 模块/自定义组件入口文件
+|
+|--test // 测试用例
+|--tools // 构建相关代码
+|   |--demo // demo 小程序目录，开发环境下会被拷贝生成到 miniprogram_dev 目录中
+|   |--test // 测试工具相关目录
+|   |--config.js // 构建相关配置文件
+|
+|--gulpfile.js
+```
 
-    用于指定元素内容定制的模版名，默认为 'hSwiperItem'，用户可以在hSwiperTemplate.wxml里面自定模版,然后在此处配置响应的模版,每个模版会注入item，index（参照上面hSwiperTemplate.wxml的解释）等数据。
+> PS：对外暴露的 js 模块/自定义组件请放在 src 目录下，不宜放置在过深的目录。另外新增的暴露模块需要在 tools/config.js 的 entry 字段中补充，不然不会进行构建。
 
-#### 接口方法
+## 测试
 
-* getList()
+* 执行测试用例：
 
-    - 描述
+```
+npm run test
+```
 
-        返回传入的数据数组
+* 检测覆盖率：
 
-* updateList(newList)
+```
+npm run coverage
+```
 
-    - 描述
+测试用例放在 test 目录下，其中 test/utils 是已封装好可在测试用例中使用的工具包，具体使用文档请[点击此处查看](./docs/test.md)。在测试中可能需要用到官方提供的一些接口（如`wx.getSystemInfo`），可在 test/utils 下自行模拟实现（里面已内置部分模拟接口）。
 
-        更新数据数据,传入一个新的数据数组，替换旧的的数据  
+> 目前测试框架仍有部分自定义组件的功能不支持（可参考测试工具包使用文档中的 TODO 列表），后续会逐步进行支持。
 
-* preView()
+## 其他命令
 
-    - 描述
+* 清空 miniprogram_dist 目录：
 
-        向左跳转一个视图    
+```
+npm run clean
+```
 
-* nextView()
+* 清空 miniprogam_dev 目录：
 
-    - 描述
-    
-        向右跳转一个视图
-
-* getNowView()
-
-    - 描述
-
-        获取当前视图的索引,从左往右，从0开始（视图对应数据的的索引）
-        
-    - 返回值说明
-
-        - index 
-
-            类型：Number
-
-
-* moveViewTo(index, useAnimation)
-    - 描述
-
-        传入视图索引，跳转到指定的视图
-
-    - 参数说明
-
-        - index
-            类型： Number
-        
-        - useAnimation
-        
-            作用： 设置为 ```true```  时，无过渡动画效果，可用于制作循环播放效果
-            
-            类型： Boolean
-            
-            默认值： false
-
-    
-#### 事件方法
-
-
-> item(一个Object),index(number)为当前视图的数据，以及索引
-
-
-* onFirstView(callback(item,index)) 
-
-    - 描述
-
-        回调函数, 跳转到第一个视图时触发
-        
-    - 参数说明
-
-        - item
-            类型： Object
-
-        - index
-            类型： Number
-
-        - callback 
-
-            类型： Function
-
-
-
-
-* onLastView(callback(item,index))
-    - 描述
-    
-        回调函数， 跳转到最后一个视图时触发
-       
-    - 参数说明
-    
-        - item
-            类型： Object
-
-        - index
-            类型： Number
-
-        - callback 
-
-            类型： Function
-
-
-
-
-* afterViewChange(callback(item,index)) 
-    - 描述
-
-        视图跳转后触发
-
-    - 参数说明
-
-        - item
-            类型： Object
-
-        - index
-            类型： Number
-
-        - callback 
-
-            类型： Function
-
-
-
-
-* beforeViewChange(callback(item,index)) 
-    - 描述
-
-        视图跳转前触发
-
-    - 参数说明
-
-        - item
-            类型： Object
-
-        - index
-            类型： Number
-
-        - callback 
-
-            类型： Function
-
-
-
-
-### 具体使用 可查看example文件夹下的例子，有注释说明。欢迎提问！！！
-
-
-
-
+```
+npm run clean-dev
+```

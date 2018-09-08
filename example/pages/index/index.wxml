@@ -1,5 +1,0 @@
-<import src="../../component/hSwiper/hSwiper.wxml"/>
-
-<view id="mainContainer">
-	<template is="hSwiper" data="{{...hSwiperVar}}"></template>
-</view>

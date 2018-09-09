@@ -7,8 +7,9 @@
 >
   <view class="hSwiperCon"
         animation="{{swiperAnmiation}}"
-        style="{{wrapperStyleValue[wrapperStyle]}}" >
-        <block wx:for="{{list}}" wx:key="index" >
+        style="{{wrapperStyle}}" >
+        {{itemStyle}}
+        <block wx:for="{{dataList}}" wx:key="index" >
             <view class="item" style="{{itemStyle}}">
                 <template is="{{templateName}}" data="{{item,index}}"></template>
             </view>

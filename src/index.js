@@ -1,7 +1,7 @@
 import HTouch from './libs/hTouch'
+import {parseStyle, styleStringify} from './libs/utils'
 
 const touchHandle = new HTouch()
-console.log(touchHandle)
 const systemInfo = wx.getSystemInfoSync()
 const SCREEN_WIDTH = systemInfo.windowWidth
 const SCREEN_HEIGHT = systemInfo.windowHeight
@@ -12,9 +12,29 @@ Component({
   },
   externalClasses: ['wrap-container'],
   data: {
+    // 视图过度动画实例
+    viewAnimation: wx.createAnimation({
+      transformOrigin: '50% 50%',
+      duration: 300,
+      timingFunction: 'ease',
+      delay: 0
+    }),
+    // 视图移动动画实例
+    moveAnimation: wx.createAnimation({
+      transformOrigin: '50% 50%',
+      duration: 0,
+      timingFunction: 'ease',
+      delay: 0
+    }),
     itemWidth: SCREEN_WIDTH,
     itemHeight: SCREEN_HEIGHT,
-    swiperAnmiation: {}
+    swiperAnmiation: {},
+    wrapperStyle: '',
+    itemStyle: '',
+    nowViewDataIndex: 0,
+    nowTranX: 0,
+    nowTranY: 0,
+    visableDataList: []
   },
   properties: {
     templateName: {
@@ -52,6 +72,21 @@ Component({
           itemHeight: this.data.itemHeight - newVal
         })
       }
+    },
+    /* 是否为垂直 */
+    vertical: {
+      type: Boolean,
+      value: false
+    },
+    /* 是否循环 */
+    recycle: {
+      type: Boolean,
+      value: true
+    },
+    /* 是否自动播放 */
+    autoPlay: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -71,13 +106,147 @@ Component({
       touchHandle.listen('touchdown', (data) => {
         console.log(data.type)
       })
+    },
+    /**
+     * 动态更新指定样式属性变量的值
+     * @param {*} attr 样式属性名
+     * @param {*} val 样式属性值
+     * @param {*} styleName 样式变量
+     */
+    updateDomStyle(styleObj, styleName) {
+      let {itemStyle} = this.data
+      let style = parseStyle(itemStyle)
+      style = Object.assign(style, styleObj)
+      this.setData({
+        [styleName]: styleStringify(style)
+      })
+      console.log(this.data)
+    },
+    /* 初始化dom 结构 */
+    initStruct() {
+      let {itemHeight, itemWidth} = this.data
+      let count = this.data.dataList.length
+      // 更新容器的宽度，默认
+      this.updateDomStyle({
+        width: count * itemWidth + 'px',
+        height: itemHeight + 'px'
+      }, 'wrapperStyle')
+
+      this.updateDomStyle({
+        width: itemWidth + 'px',
+        height: itemHeight + 'px'
+      }, 'itemStyle')
+    },
+    /* 计算可视区域元素 */
+    calViasbleDataList() {
+      let res = []
+      let {dataList, nowViewDataIndex} = this.data
+      let dataCount = dataList.length
+      let pre1 = (dataCount + (nowViewDataIndex - 1)) % dataCount
+      let pre2 = (dataCount + (nowViewDataIndex - 2)) % dataCount
+      let next1 = (nowViewDataIndex + 1) % dataCount
+      let next2 = ((nowViewDataIndex + 2)) % dataCount
+      res[0] = dataList[pre2]
+      res[1] = dataList[pre1]
+      res[2] = dataList[nowViewDataIndex]
+      res[3] = dataList[next1]
+      res[4] = dataList[next2]
+
+      this.setData({
+        visableDataList: res
+      })
+    },
+    /**
+     * @description 移动到指定dom index 位置
+     * @param {*} domIndex dom元素的index
+     * @param {*} useAnimation 是否启用过渡动画
+     */
+    moveViewTo(domIndex, useAnimation) {
+      let {
+        itemWidth, itemHeight, reduceDistance, reduceDistanceX, reduceDistanceY, vertical
+      } = this.data
+
+      let pos = 0
+      let attr = 'translateX'
+      /* 垂直方向 */
+      if (vertical) {
+        pos = -domIndex * itemHeight + (reduceDistance + reduceDistanceY) / 2
+        attr = 'translateY'
+      } else {
+        /* 水平方向 */
+        pos = -3 * itemWidth + (reduceDistance + reduceDistanceX) / 2
+        attr = 'translateX'
+      }
+      /* 是否启用动画过渡 */
+      if (useAnimation) {
+        this.data.viewAnimation[attr](pos).translate3d(0).step()
+        this.setData({
+          swiperAnmiation: this.data.viewAnimation.export()
+        })
+      } else {
+        let animation = wx.createAnimation({
+          transformOrigin: '50% 50%',
+          duration: 0,
+          timingFunction: 'linear',
+          delay: 0
+        })
+        animation[attr](pos).translate3d(0).step()
+        this.setData({
+          swiperAnmiation: animation.export()
+        })
+      }
+    },
+    /* 向后一个视图 */
+    nextView(useAnimation = true) {
+      this.moveViewTo(3, useAnimation)
+    },
+    /* 向前一个视图 */
+    preView(useAnimation = true) {
+      this.moveViewTo(1, useAnimation)
+    },
+    movePos(pos) {
+      let {
+        vertical, viewAnimation, nowTranX, nowTranY
+      } = this.data
+      let nowTran = nowTranX
+      let attr = 'translateX'
+      if (vertical) {
+        attr = 'translateY'
+        nowTran = nowTranY
+      } else {
+        attr = 'translateX'
+        nowTran = nowTranX
+      }
+      let tempPos = nowTran + pos
+      let count = this.data.list.length > 0 ? (this.data.list.length) : 1
+      let minPos = -this.itemWidth * (count - 1) - 40
+      let maxPos = 40
+
+      // 最大的位置
+      if (tempPos > maxPos) {
+        tempPos = maxPos
+      }
+
+      if (tempPos < minPos) {
+        tempPos = minPos
+      }
+      viewAnimation[attr](pos).translate3d(0).step()
+      this.setData({
+        swiperAnmiation: this.data.viewAnimation.export()
+      })
     }
   },
   lifetimes: {
     created() {
       this.registerTouchEvent()
+    },
+    ready() {
+      this.triggerEvent('customevent', this)
+      this.initStruct()
+      this.calViasbleDataList()
+
+      console.log(this.data)
     }
   },
-  pageLifetimes: {
-  }
+  pageLifetimes: {}
 })

@@ -52,6 +52,22 @@ Component({
       type: Array,
       value: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     },
+    initIndex: {
+      type: Number,
+      default: 0,
+      observer(newVal) {
+        if (!this.data.dataList.length) {
+          return
+        }
+        let maxIndex = this.data.dataList.length - 1
+
+        let val = newVal > maxIndex ? maxIndex : newVal
+        val = val < 0 ? 0 : newVal
+        this.setData({
+          nowViewDataIndex: val
+        })
+      }
+    },
     /* 滚动图的宽度 */
     width: {
       type: Number,
@@ -121,7 +137,7 @@ Component({
     /* 是否循环 */
     recycle: {
       type: Boolean,
-      value: true
+      value: false
     },
     /* 是否自动播放 */
     autoPlay: {
@@ -204,7 +220,7 @@ Component({
 
       this.updateDomStyle(viewBoxStyle, 'viewBoxStyle')
     },
-    /* 计算可视区域元素，用于 */
+    /* 计算可视区域元素，用于正常情况下的条状 */
     calViasbleDataList() {
       /* 区分是否支持循环滚动 */
       let res = []
@@ -219,6 +235,18 @@ Component({
       res[2] = dataList[nowViewDataIndex]
       res[3] = dataList[next1]
       res[4] = dataList[next2]
+      if (!this.data.recycle) {
+        let emptyElement = {
+          templateName: '_hswiper_emptyItem'
+        }
+        if (nowViewDataIndex === 0) {
+          res[1] = emptyElement
+          res[0] = emptyElement
+        } else if (nowViewDataIndex === (dataCount - 1)) {
+          res[3] = emptyElement
+          res[4] = emptyElement
+        }
+      }
       this.setData({
         visableDataList: res
       })
@@ -244,8 +272,6 @@ Component({
         attr = 'translateX'
       }
 
-      console.log('domIndex', domIndex, pos)
-
       /* 是否启用动画过渡 */
       if (useAnimation) {
         VIEWANI_MATION[attr](pos).translate3d(0).step()
@@ -269,6 +295,20 @@ Component({
     /* 向后一个视图 */
     nextView(useAnimation = true) {
       let {nowViewDataIndex, dataList} = this.data
+      let len = dataList.length
+      /* 当前是否已经是最后一个 */
+      if (nowViewDataIndex === (len - 1)) {
+        console.log('已经是最后一个')
+        if (!this.data.recycle) {
+          console.log('不循环滚动')
+          return null
+        }
+      }
+
+      if ((nowViewDataIndex + 1) === (len - 1)) {
+        console.log('即将是最后一个')
+      }
+
       return this.moveViewTo(3, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex + 1
         let len = dataList.length
@@ -284,6 +324,18 @@ Component({
     /* 向前一个视图 */
     preView(useAnimation = true) {
       let {nowViewDataIndex, dataList} = this.data
+      /* 当前是否已经是第一个 */
+      if (nowViewDataIndex === 0) {
+        console.log('已经是第一个')
+        if (!this.data.recycle) {
+          console.log('不循环滚动')
+          return null
+        }
+      }
+
+      if ((nowViewDataIndex - 1) === 0) {
+        console.log('即将是第一个')
+      }
       return this.moveViewTo(1, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex - 1
         let len = dataList.length

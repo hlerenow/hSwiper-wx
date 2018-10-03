@@ -4,14 +4,14 @@
   bindtouchstart="touchstart"
   bindtouchmove="touchmove"
   bindtouchend="touchend"
+  style="{{viewBoxStyle}}"
 >
   <view class="hSwiperCon"
         animation="{{swiperAnmiation}}"
         style="{{wrapperStyle}}" >
-        {{itemStyle}}
         <block wx:for="{{visableDataList}}" wx:key="index" >
             <view class="item" style="{{itemStyle}}">
-                <template is="{{item.templateName || templateName}}" data="{{item,index}}"></template>
+                <template is="{{item.templateName || templateName}}" data="{{item, index}}"></template>
             </view>
         </block>
   </view>

@@ -160,8 +160,13 @@ Component({
           this.preView()
           console.log(data.type)
         })
+        touchHandle.listen('touchmove', (data) => {
+          console.log('data touchmove', data)
+          console.log(data.type)
+        })
         return
       }
+      /* 垂直方向滚动 */
       touchHandle.listen('touchup', (data) => {
         this.nextView()
         console.log(data.type)
@@ -170,6 +175,11 @@ Component({
       touchHandle.listen('touchdown', (data) => {
         this.preView()
         console.log(data.type)
+      })
+      touchHandle.listen('touchmove', (data) => {
+        console.log('data touchmove', data)
+        console.log(data.type)
+        this.movePos(data.startY - data.endY)
       })
     },
     /**
@@ -348,6 +358,7 @@ Component({
         return null
       })
     },
+    /* 移动到指定像素位置 */
     movePos(pos) {
       let {
         vertical, viewAnimation, nowTranX, nowTranY
@@ -362,7 +373,7 @@ Component({
         nowTran = nowTranX
       }
       let tempPos = nowTran + pos
-      let count = this.data.list.length > 0 ? (this.data.list.length) : 1
+      let count = this.data.list.length > 0 ? (this.data.data.length) : 1
       let minPos = -this.itemWidth * (count - 1) - 40
       let maxPos = 40
 
@@ -386,7 +397,6 @@ Component({
       this.registerTouchEvent()
       this.calViasbleDataList()
       this.moveViewTo(2)
-      console.log(this.data)
     }
   },
   pageLifetimes: {}

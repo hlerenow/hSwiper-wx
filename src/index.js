@@ -83,7 +83,7 @@ Component({
         let tempReduceDistanceY = (newVal + this.data.reduceDistanceY) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
-          itemHeight: this.data.itemHeight - tempReduceDistanceY
+          itemHeight: this.data.height - tempReduceDistanceY
         })
       }
     },
@@ -96,7 +96,7 @@ Component({
         let tempReduceDistanceY = (newVal + this.data.reduceDistanceY) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
-          itemHeight: this.data.itemHeight - tempReduceDistanceY
+          itemHeight: this.data.height - tempReduceDistanceY
         })
       }
     },
@@ -109,7 +109,7 @@ Component({
         let tempReduceDistanceY = (newVal + newVal) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
-          itemHeight: this.data.itemHeight - tempReduceDistanceY
+          itemHeight: this.data.height - tempReduceDistanceY
         })
       }
     },
@@ -230,19 +230,20 @@ Component({
      */
     moveViewTo(domIndex, useAnimation) {
       let {
-        itemWidth, itemHeight, vertical
+        itemWidth, itemHeight, vertical, reduceDistance, reduceDistanceX, reduceDistanceY
       } = this.data
       let pos = 0
       let attr = 'translateX'
       /* 垂直方向 */
       if (vertical) {
-        pos = -domIndex * itemHeight
+        pos = -domIndex * itemHeight + reduceDistance + reduceDistanceX
         attr = 'translateY'
       } else {
         /* 水平方向 */
-        pos = -domIndex * itemWidth
+        pos = -domIndex * itemWidth + reduceDistance + reduceDistanceY
         attr = 'translateX'
       }
+
       console.log('domIndex', domIndex, pos)
 
       /* 是否启用动画过渡 */
@@ -329,7 +330,6 @@ Component({
   },
   lifetimes: {
     ready() {
-      console.log('qqwe', this.data)
       this.initStruct()
       this.registerTouchEvent()
       this.calViasbleDataList()

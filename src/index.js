@@ -5,6 +5,22 @@ const touchHandle = new HTouch()
 const systemInfo = wx.getSystemInfoSync()
 const SCREEN_WIDTH = systemInfo.windowWidth
 const SCREEN_HEIGHT = systemInfo.windowHeight
+/* 动画过渡时间 */
+let DURATION = 300
+// 视图过度动画实例
+const VIEWANI_MATION = wx.createAnimation({
+  transformOrigin: '50% 50%',
+  duration: DURATION,
+  timingFunction: 'ease',
+  delay: 0
+})
+// 视图移动动画实例
+const MOVE_ANIMATION = wx.createAnimation({
+  transformOrigin: '50% 50%',
+  duration: 0,
+  timingFunction: 'ease',
+  delay: 0
+})
 /* 触摸句柄 */
 Component({
   options: {
@@ -12,21 +28,9 @@ Component({
   },
   externalClasses: ['wrap-container'],
   data: {
-    // 视图过度动画实例
-    viewAnimation: wx.createAnimation({
-      transformOrigin: '50% 50%',
-      duration: 300,
-      timingFunction: 'ease',
-      delay: 0
-    }),
-    // 视图移动动画实例
-    moveAnimation: wx.createAnimation({
-      transformOrigin: '50% 50%',
-      duration: 0,
-      timingFunction: 'ease',
-      delay: 0
-    }),
+    /* 每个元素的宽度 */
     itemWidth: SCREEN_WIDTH,
+    /* 每个元素的高度 */
     itemHeight: SCREEN_HEIGHT,
     swiperAnmiation: {},
     wrapperStyle: '',
@@ -41,35 +45,40 @@ Component({
       type: String,
       value: 'hSwiperItem'
     },
+    /* 传入的数据 */
     dataList: {
       type: Array,
-      value: [1, 2, 3, 4]
+      value: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     },
+    /* 垂直和水平方向各自减少的距离 */
     reduceDistance: {
       type: Number,
       value: 0,
       observer(newVal) {
+        let tempReduceDistance = (newVal + this.data.reduceDistanceX) * 2
         this.setData({
-          itemWidth: this.data.itemWidth - newVal - this.data.reduceDistanceX,
-          itemHeight: this.data.itemHeight - newVal
+          itemWidth: this.data.itemWidth - tempReduceDistance,
+          itemHeight: this.data.itemHeight - tempReduceDistance
         })
       }
     },
+    /* 水平方向减少的距离 */
     reduceDistanceX: {
       type: Number,
       value: 0,
       observer(newVal) {
         this.setData({
-          itemWidth: this.data.itemWidth - newVal - this.reduceDistanceY
+          itemWidth: this.data.itemWidth - newVal - this.reduceDistanceY * 2
         })
       }
     },
+    /* 垂直方向减少的距离 */
     reduceDistanceY: {
       type: Number,
       value: 0,
       observer(newVal) {
         this.setData({
-          itemHeight: this.data.itemHeight - newVal
+          itemHeight: this.data.itemHeight - newVal * 2
         })
       }
     },
@@ -95,12 +104,14 @@ Component({
     touchend: touchHandle.touchend.bind(touchHandle),
     registerTouchEvent() {
       touchHandle.listen('touchleft', (data) => {
+        this.nextView()
         console.log(data.type)
       })
       touchHandle.listen('touchup', (data) => {
         console.log(data.type)
       })
       touchHandle.listen('touchright', (data) => {
+        this.preView()
         console.log(data.type)
       })
       touchHandle.listen('touchdown', (data) => {
@@ -137,8 +148,9 @@ Component({
         height: itemHeight + 'px'
       }, 'itemStyle')
     },
-    /* 计算可视区域元素 */
+    /* 计算可视区域元素，用于 */
     calViasbleDataList() {
+      /* 区分是否支持循环滚动 */
       let res = []
       let {dataList, nowViewDataIndex} = this.data
       let dataCount = dataList.length
@@ -151,7 +163,6 @@ Component({
       res[2] = dataList[nowViewDataIndex]
       res[3] = dataList[next1]
       res[4] = dataList[next2]
-
       this.setData({
         visableDataList: res
       })
@@ -162,47 +173,70 @@ Component({
      * @param {*} useAnimation 是否启用过渡动画
      */
     moveViewTo(domIndex, useAnimation) {
+      console.log('domIndex', domIndex)
       let {
         itemWidth, itemHeight, reduceDistance, reduceDistanceX, reduceDistanceY, vertical
       } = this.data
-
       let pos = 0
       let attr = 'translateX'
       /* 垂直方向 */
       if (vertical) {
-        pos = -domIndex * itemHeight + (reduceDistance + reduceDistanceY) / 2
+        pos = -domIndex * itemHeight + (reduceDistance + reduceDistanceY)
         attr = 'translateY'
       } else {
         /* 水平方向 */
-        pos = -3 * itemWidth + (reduceDistance + reduceDistanceX) / 2
+        pos = -domIndex * itemWidth + (reduceDistance + reduceDistanceX)
         attr = 'translateX'
       }
       /* 是否启用动画过渡 */
       if (useAnimation) {
-        this.data.viewAnimation[attr](pos).translate3d(0).step()
+        VIEWANI_MATION[attr](pos).translate3d(0).step()
         this.setData({
-          swiperAnmiation: this.data.viewAnimation.export()
+          swiperAnmiation: VIEWANI_MATION.export()
         })
       } else {
-        let animation = wx.createAnimation({
-          transformOrigin: '50% 50%',
-          duration: 0,
-          timingFunction: 'linear',
-          delay: 0
-        })
-        animation[attr](pos).translate3d(0).step()
+        MOVE_ANIMATION[attr](pos).translate3d(0).step()
         this.setData({
-          swiperAnmiation: animation.export()
+          swiperAnmiation: MOVE_ANIMATION.export()
         })
       }
+
+      let p = new Promise((resolve) => {
+        setTimeout(() => {
+          resolve()
+        }, DURATION)
+      })
+      return p
     },
     /* 向后一个视图 */
     nextView(useAnimation = true) {
-      this.moveViewTo(3, useAnimation)
+      let {nowViewDataIndex, dataList} = this.data
+      return this.moveViewTo(3, useAnimation).then(() => {
+        let nextIndex = nowViewDataIndex + 1
+        let len = dataList.length
+        nextIndex = Math.abs(nextIndex % len)
+        this.setData({
+          nowViewDataIndex: nextIndex
+        })
+        this.calViasbleDataList()
+        this.moveViewTo(2)
+        return null
+      })
     },
     /* 向前一个视图 */
     preView(useAnimation = true) {
-      this.moveViewTo(1, useAnimation)
+      let {nowViewDataIndex, dataList} = this.data
+      return this.moveViewTo(1, useAnimation).then(() => {
+        let nextIndex = nowViewDataIndex - 1
+        let len = dataList.length
+        nextIndex = Math.abs((nextIndex + len) % len)
+        this.setData({
+          nowViewDataIndex: nextIndex
+        })
+        this.calViasbleDataList()
+        this.moveViewTo(2)
+        return null
+      })
     },
     movePos(pos) {
       let {
@@ -244,7 +278,7 @@ Component({
       this.triggerEvent('customevent', this)
       this.initStruct()
       this.calViasbleDataList()
-
+      this.moveViewTo(2)
       console.log(this.data)
     }
   },

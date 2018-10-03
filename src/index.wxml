@@ -9,9 +9,9 @@
         animation="{{swiperAnmiation}}"
         style="{{wrapperStyle}}" >
         {{itemStyle}}
-        <block wx:for="{{dataList}}" wx:key="index" >
+        <block wx:for="{{visableDataList}}" wx:key="index" >
             <view class="item" style="{{itemStyle}}">
-                <template is="{{templateName}}" data="{{item,index}}"></template>
+                <template is="{{item.templateName || templateName}}" data="{{item,index}}"></template>
             </view>
         </block>
   </view>

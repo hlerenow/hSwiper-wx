@@ -2,7 +2,6 @@
 .hSwiper {
 	overflow: hidden;
   position: relative;
-  border: 1px solid blue;
   box-sizing: border-box;
 }
 
@@ -15,5 +14,4 @@
 	position:relative;
 	float: left;
   box-sizing:border-box;
-  border: 1px solid red;
 }

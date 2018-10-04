@@ -74,7 +74,7 @@ Component({
       type: Number,
       value: SCREEN_WIDTH,
       observer(newVal) {
-        let tempReduceDistance = (this.data.reduceDistance + this.data.reduceDistanceX) * 2
+        let tempReduceDistance = (this.data.padding + this.data.paddingX) * 2
         this.setData({
           itemWidth: newVal - tempReduceDistance
         })
@@ -85,19 +85,19 @@ Component({
       type: Number,
       value: SCREEN_HEIGHT,
       observer(newVal) {
-        let tempReduceDistance = (this.data.reduceDistance + this.data.reduceDistanceY) * 2
+        let tempReduceDistance = (this.data.padding + this.data.paddingY) * 2
         this.setData({
           itemHeight: newVal - tempReduceDistance
         })
       }
     },
     /* 垂直和水平方向各自减少的距离 */
-    reduceDistance: {
+    padding: {
       type: Number,
       value: 0,
       observer(newVal) {
-        let tempReduceDistanceX = (newVal + this.data.reduceDistanceX) * 2
-        let tempReduceDistanceY = (newVal + this.data.reduceDistanceY) * 2
+        let tempReduceDistanceX = (newVal + this.data.paddingX) * 2
+        let tempReduceDistanceY = (newVal + this.data.paddingY) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
           itemHeight: this.data.height - tempReduceDistanceY
@@ -105,12 +105,12 @@ Component({
       }
     },
     /* 水平方向减少的距离 */
-    reduceDistanceX: {
+    paddingX: {
       type: Number,
       value: 0,
       observer(newVal) {
         let tempReduceDistanceX = (newVal + newVal) * 2
-        let tempReduceDistanceY = (newVal + this.data.reduceDistanceY) * 2
+        let tempReduceDistanceY = (newVal + this.data.paddingY) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
           itemHeight: this.data.height - tempReduceDistanceY
@@ -118,11 +118,11 @@ Component({
       }
     },
     /* 垂直方向减少的距离 */
-    reduceDistanceY: {
+    paddingY: {
       type: Number,
       value: 0,
       observer(newVal) {
-        let tempReduceDistanceX = (newVal + this.data.reduceDistanceY) * 2
+        let tempReduceDistanceX = (newVal + this.data.paddingY) * 2
         let tempReduceDistanceY = (newVal + newVal) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
@@ -273,20 +273,20 @@ Component({
      */
     moveViewTo(domIndex, useAnimation) {
       let {
-        itemWidth, itemHeight, vertical, reduceDistance, reduceDistanceX, reduceDistanceY
+        itemWidth, itemHeight, vertical, padding, paddingX, paddingY
       } = this.data
       let pos = 0
       let attr = 'translateX'
       /* 垂直方向 */
       if (vertical) {
-        pos = -domIndex * itemHeight + reduceDistance + reduceDistanceX
+        pos = -domIndex * itemHeight + padding + paddingX
         attr = 'translateY'
         this.setData({
           nowTranY: pos
         })
       } else {
         /* 水平方向 */
-        pos = -domIndex * itemWidth + reduceDistance + reduceDistanceY
+        pos = -domIndex * itemWidth + padding + paddingY
         attr = 'translateX'
         this.setData({
           nowTranX: pos

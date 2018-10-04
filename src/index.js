@@ -193,15 +193,17 @@ Component({
           this.preView()
         })
         touchHandle.listen('touchmove', (data) => {
+          /* 过渡中禁止手指滑动 */
+          if (this.data.tranforming) {
+            console.log('过渡中...', this.data.tranforming)
+            return
+          }
+          console.log('no过渡中...', this.data.tranforming)
           this.triggerEvent('move', {
             index: this.data.nowViewDataIndex,
             nativeEvent: data,
             vertical: this.data.vertical
           })
-          /* 过渡中禁止手指滑动 */
-          if (this.data.tranforming) {
-            return
-          }
           this.movePos(data.endX - data.startX, 'translateX')
         })
         touchHandle.listen('touchend', () => {
@@ -358,9 +360,6 @@ Component({
     },
     /* 向后一个视图 */
     nextView(useAnimation = true) {
-      if (!this.canTransforming()) {
-        return null
-      }
       let {nowViewDataIndex, dataList} = this.data
       let len = dataList.length
       /* 当前是否已经是最后一个 */
@@ -372,6 +371,9 @@ Component({
           this.moveViewTo(2, useAnimation)
           return null
         }
+      }
+      if (!this.canTransforming()) {
+        return null
       }
 
       if ((nowViewDataIndex + 1) === (len - 1)) {
@@ -408,9 +410,6 @@ Component({
     },
     /* 向前一个视图 */
     preView(useAnimation = true) {
-      if (!this.canTransforming()) {
-        return null
-      }
       let {nowViewDataIndex, dataList} = this.data
       /* 当前是否已经是第一个 */
       if (nowViewDataIndex === 0) {
@@ -422,6 +421,10 @@ Component({
           return null
         }
       }
+      if (!this.canTransforming()) {
+        return null
+      }
+
       if ((nowViewDataIndex - 1) === 0) {
         this.triggerEvent('wiilFirstView', {
           index: nowViewDataIndex
@@ -468,6 +471,9 @@ Component({
     },
     /* 移动到指定像素位置 */
     movePos(pos, type = 'translateX') {
+      if (this.data.tranforming) {
+        return
+      }
       let {
         itemHeight, itemWidth, nowTranY, nowTranX
       } = this.data
@@ -487,6 +493,7 @@ Component({
         min = -(VISABLE_COUNT - 1) * itemHeight
         maxDistance = itemHeight
       }
+      maxDistance -= 10
       if (Math.abs(pos) > maxDistance) {
         return
       }

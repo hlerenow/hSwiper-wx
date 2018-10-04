@@ -67,9 +67,6 @@ class HTouch extends HEvent {
 
     this.moveDistanceY = distanceY
     this.moveDistanceX = distanceX
-    if (times < 100) {
-      return
-    }
 
     if (Math.abs(distanceX) < 10 && Math.abs(distanceY) < 10) {
       return

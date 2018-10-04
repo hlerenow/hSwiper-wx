@@ -86,6 +86,7 @@ class HTouch extends HEvent {
       startY: this.startY,
       endY: e.changedTouches[0].clientY
     }
+    this.emit('touchend', touchObj)
     let type = ''
     /* 确定是垂直 */
     if ((Math.abs(distanceY) - Math.abs(distanceX)) > 0) {

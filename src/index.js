@@ -43,7 +43,9 @@ Component({
     nowTranY: 0,
     visableDataList: [],
     /* 最外层可是区域盒子的样式 */
-    viewBoxStyle: ''
+    viewBoxStyle: '',
+    /* 是否过渡中 */
+    tranforming: false
   },
   properties: {
     animationType: {
@@ -196,7 +198,14 @@ Component({
             nativeEvent: data,
             vertical: this.data.vertical
           })
+          /* 过渡中禁止手指滑动 */
+          if (this.data.tranforming) {
+            return
+          }
           this.movePos(data.endX - data.startX, 'translateX')
+        })
+        touchHandle.listen('touchend', () => {
+          this.moveViewTo(2)
         })
         return
       }
@@ -308,6 +317,7 @@ Component({
       let {
         itemWidth, itemHeight, vertical, padding, paddingX, paddingY
       } = this.data
+
       let pos = 0
       let attr = 'translateX'
       /* 垂直方向 */
@@ -348,6 +358,9 @@ Component({
     },
     /* 向后一个视图 */
     nextView(useAnimation = true) {
+      if (!this.canTransforming()) {
+        return null
+      }
       let {nowViewDataIndex, dataList} = this.data
       let len = dataList.length
       /* 当前是否已经是最后一个 */
@@ -387,11 +400,17 @@ Component({
           from: nowViewDataIndex,
           to: nowViewDataIndex + 1
         })
+        this.setData({
+          tranforming: false
+        })
         return null
       })
     },
     /* 向前一个视图 */
     preView(useAnimation = true) {
+      if (!this.canTransforming()) {
+        return null
+      }
       let {nowViewDataIndex, dataList} = this.data
       /* 当前是否已经是第一个 */
       if (nowViewDataIndex === 0) {
@@ -428,8 +447,24 @@ Component({
           from: nowViewDataIndex,
           to: nowViewDataIndex - 1
         })
+        this.setData({
+          tranforming: false
+        })
         return null
       })
+    },
+    /* 是否可以进行过渡 */
+    canTransforming() {
+      let {
+        tranforming
+      } = this.data
+      if (tranforming) {
+        return false
+      }
+      this.setData({
+        tranforming: true
+      })
+      return true
     },
     /* 移动到指定像素位置 */
     movePos(pos, type = 'translateX') {

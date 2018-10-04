@@ -1,4 +1,6 @@
 /*滑动样式*/
+@import "/hSwiper/swiperTemplate.wxss";
+
 .hSwiper {
 	overflow: hidden;
   position: relative;

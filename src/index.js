@@ -377,6 +377,11 @@ Component({
           index: nowViewDataIndex
         })
       }
+      this.triggerEvent('beforeViewChange', {
+        index: nowViewDataIndex,
+        from: nowViewDataIndex,
+        to: nowViewDataIndex - 1
+      })
       return this.moveViewTo(1, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex - 1
         let len = dataList.length
@@ -385,7 +390,13 @@ Component({
           nowViewDataIndex: nextIndex
         })
         this.calViasbleDataList()
-        this.moveViewTo(2)
+        return this.moveViewTo(2)
+      }).then(() => {
+        this.triggerEvent('beforeViewChange', {
+          index: nowViewDataIndex,
+          from: nowViewDataIndex,
+          to: nowViewDataIndex - 1
+        })
         return null
       })
     },

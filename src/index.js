@@ -8,11 +8,13 @@ const SCREEN_HEIGHT = systemInfo.windowHeight
 const VISABLE_COUNT = 5
 /* 动画过渡时间 */
 let DURATION = 300
+let TIMEING_FUNCTION = 'ease'
+const TIMEING_FUNCTION_ARRAY = ['linear', 'ease-in', 'ease-in-out', 'ease-out', 'step-start', 'step-end']
 // 视图过度动画实例
-const VIEWANI_MATION = wx.createAnimation({
+let VIEWANI_MATION = wx.createAnimation({
   transformOrigin: '50% 50%',
   duration: DURATION,
-  timingFunction: 'ease',
+  timingFunction: TIMEING_FUNCTION,
   delay: 0
 })
 // 视图移动动画实例
@@ -44,6 +46,35 @@ Component({
     viewBoxStyle: ''
   },
   properties: {
+    animationType: {
+      type: String,
+      default: 'ease',
+      observer(newVal) {
+        if (TIMEING_FUNCTION_ARRAY.indexOf(newVal) < 0) {
+          return
+        }
+        TIMEING_FUNCTION = newVal
+        VIEWANI_MATION = wx.createAnimation({
+          transformOrigin: '50% 50%',
+          duration: DURATION,
+          timingFunction: newVal,
+          delay: 0
+        })
+      }
+    },
+    animationDuration: {
+      type: Number,
+      default: 300,
+      observer(newVal) {
+        DURATION = newVal
+        VIEWANI_MATION = wx.createAnimation({
+          transformOrigin: '50% 50%',
+          duration: DURATION,
+          timingFunction: newVal,
+          delay: 0
+        })
+      }
+    },
     templateName: {
       type: String,
       value: 'hSwiperItem'
@@ -51,7 +82,7 @@ Component({
     /* 传入的数据 */
     dataList: {
       type: Array,
-      value: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      value: []
     },
     initIndex: {
       type: Number,
@@ -440,6 +471,9 @@ Component({
   },
   lifetimes: {
     ready() {
+      if (!this.data.dataList.length) {
+        throw new Error('dataList 不能为空')
+      }
       this.initStruct()
       this.registerTouchEvent()
       this.calViasbleDataList()

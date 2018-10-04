@@ -153,33 +153,36 @@ Component({
     registerTouchEvent() {
       let {vertical} = this.data
       if (!vertical) {
-        touchHandle.listen('touchleft', (data) => {
+        touchHandle.listen('touchleft', () => {
           this.nextView()
-          console.log(data.type)
         })
-        touchHandle.listen('touchright', (data) => {
+        touchHandle.listen('touchright', () => {
           this.preView()
-          console.log(data.type)
         })
         touchHandle.listen('touchmove', (data) => {
-          console.log('data touchmove', data)
-          console.log(data.type, 'translateX')
+          this.triggerEvent('move', {
+            index: this.data.nowViewDataIndex,
+            nativeEvent: data,
+            vertical: this.data.vertical
+          })
           this.movePos(data.endX - data.startX, 'translateX')
         })
         return
       }
       /* 垂直方向滚动 */
-      touchHandle.listen('touchup', (data) => {
+      touchHandle.listen('touchup', () => {
         this.nextView()
-        console.log(data.type)
       })
 
-      touchHandle.listen('touchdown', (data) => {
+      touchHandle.listen('touchdown', () => {
         this.preView()
-        console.log(data.type)
       })
       touchHandle.listen('touchmove', (data) => {
-        console.log('touchmove', data, data.endY - data.startY)
+        this.triggerEvent('move', {
+          index: this.data.nowViewDataIndex,
+          nativeEvent: data,
+          vertical: this.data.vertical
+        })
         this.movePos(data.endY - data.startY, 'translateY')
       })
     },
@@ -196,7 +199,6 @@ Component({
       this.setData({
         [styleName]: styleStringify(style)
       })
-      console.log(this.data)
     },
     /* 初始化dom 结构 */
     initStruct() {
@@ -319,18 +321,26 @@ Component({
       let len = dataList.length
       /* 当前是否已经是最后一个 */
       if (nowViewDataIndex === (len - 1)) {
-        console.log('已经是最后一个')
+        this.triggerEvent('lastView', {
+          index: nowViewDataIndex
+        })
         if (!this.data.recycle) {
-          console.log('不循环滚动')
           this.moveViewTo(2, useAnimation)
           return null
         }
       }
 
       if ((nowViewDataIndex + 1) === (len - 1)) {
-        console.log('即将是最后一个')
+        this.triggerEvent('willLastView', {
+          index: nowViewDataIndex
+        })
       }
 
+      this.triggerEvent('beforeViewChange', {
+        index: nowViewDataIndex,
+        from: nowViewDataIndex,
+        to: nowViewDataIndex + 1
+      })
       return this.moveViewTo(3, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex + 1
         let len = dataList.length
@@ -339,7 +349,13 @@ Component({
           nowViewDataIndex: nextIndex
         })
         this.calViasbleDataList()
-        this.moveViewTo(2)
+        return this.moveViewTo(2)
+      }).then(() => {
+        this.triggerEvent('afterViewChange', {
+          index: nowViewDataIndex,
+          from: nowViewDataIndex,
+          to: nowViewDataIndex + 1
+        })
         return null
       })
     },
@@ -348,16 +364,18 @@ Component({
       let {nowViewDataIndex, dataList} = this.data
       /* 当前是否已经是第一个 */
       if (nowViewDataIndex === 0) {
-        console.log('已经是第一个')
+        this.triggerEvent('firstView', {
+          index: nowViewDataIndex
+        })
         if (!this.data.recycle) {
-          console.log('不循环滚动')
           this.moveViewTo(2, useAnimation)
           return null
         }
       }
-
       if ((nowViewDataIndex - 1) === 0) {
-        console.log('即将是第一个')
+        this.triggerEvent('wiilFirstView', {
+          index: nowViewDataIndex
+        })
       }
       return this.moveViewTo(1, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex - 1

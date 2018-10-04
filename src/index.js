@@ -5,6 +5,7 @@ const touchHandle = new HTouch()
 const systemInfo = wx.getSystemInfoSync()
 const SCREEN_WIDTH = systemInfo.windowWidth
 const SCREEN_HEIGHT = systemInfo.windowHeight
+const VISABLE_COUNT = 5
 /* 动画过渡时间 */
 let DURATION = 300
 // 视图过度动画实例
@@ -162,7 +163,8 @@ Component({
         })
         touchHandle.listen('touchmove', (data) => {
           console.log('data touchmove', data)
-          console.log(data.type)
+          console.log(data.type, 'translateX')
+          this.movePos(data.endX - data.startX, 'translateX')
         })
         return
       }
@@ -177,9 +179,8 @@ Component({
         console.log(data.type)
       })
       touchHandle.listen('touchmove', (data) => {
-        console.log('data touchmove', data)
-        console.log(data.type)
-        this.movePos(data.startY - data.endY)
+        console.log('touchmove', data, data.endY - data.startY)
+        this.movePos(data.endY - data.startY, 'translateY')
       })
     },
     /**
@@ -204,7 +205,7 @@ Component({
       } = this.data
       let h = 0
       let w = 0
-      let count = 5
+      let count = VISABLE_COUNT
       let viewBoxStyle = {
         width: width + 'px',
         height: height + 'px'
@@ -255,6 +256,10 @@ Component({
         } else if (nowViewDataIndex === (dataCount - 1)) {
           res[3] = emptyElement
           res[4] = emptyElement
+        } else if (nowViewDataIndex === 1) {
+          res[0] = emptyElement
+        } else if (nowViewDataIndex === (dataCount - 2)) {
+          res[4] = emptyElement
         }
       }
       this.setData({
@@ -276,10 +281,16 @@ Component({
       if (vertical) {
         pos = -domIndex * itemHeight + reduceDistance + reduceDistanceX
         attr = 'translateY'
+        this.setData({
+          nowTranY: pos
+        })
       } else {
         /* 水平方向 */
         pos = -domIndex * itemWidth + reduceDistance + reduceDistanceY
         attr = 'translateX'
+        this.setData({
+          nowTranX: pos
+        })
       }
 
       /* 是否启用动画过渡 */
@@ -311,6 +322,7 @@ Component({
         console.log('已经是最后一个')
         if (!this.data.recycle) {
           console.log('不循环滚动')
+          this.moveViewTo(2, useAnimation)
           return null
         }
       }
@@ -339,6 +351,7 @@ Component({
         console.log('已经是第一个')
         if (!this.data.recycle) {
           console.log('不循环滚动')
+          this.moveViewTo(2, useAnimation)
           return null
         }
       }
@@ -359,35 +372,40 @@ Component({
       })
     },
     /* 移动到指定像素位置 */
-    movePos(pos) {
+    movePos(pos, type = 'translateX') {
       let {
-        vertical, viewAnimation, nowTranX, nowTranY
+        itemHeight, itemWidth, nowTranY, nowTranX
       } = this.data
-      let nowTran = nowTranX
-      let attr = 'translateX'
-      if (vertical) {
-        attr = 'translateY'
-        nowTran = nowTranY
+      let nowTran = 0
+      let min = 0
+      let max = 0
+      let maxDistance = 0
+
+      if (type === 'translateX') {
+        nowTran = nowTranX + pos
+        max = 0
+        min = -(VISABLE_COUNT - 1) * itemWidth
+        maxDistance = itemWidth
       } else {
-        attr = 'translateX'
-        nowTran = nowTranX
+        nowTran = nowTranY + pos
+        max = 0
+        min = -(VISABLE_COUNT - 1) * itemHeight
+        maxDistance = itemHeight
       }
-      let tempPos = nowTran + pos
-      let count = this.data.list.length > 0 ? (this.data.data.length) : 1
-      let minPos = -this.itemWidth * (count - 1) - 40
-      let maxPos = 40
-
-      // 最大的位置
-      if (tempPos > maxPos) {
-        tempPos = maxPos
+      if (Math.abs(pos) > maxDistance) {
+        return
       }
 
-      if (tempPos < minPos) {
-        tempPos = minPos
+      if (pos > max) {
+        pos = max
       }
-      viewAnimation[attr](pos).translate3d(0).step()
+
+      if (pos < min) {
+        pos = min
+      }
+      MOVE_ANIMATION[type](nowTran).translate3d(0).step()
       this.setData({
-        swiperAnmiation: this.data.viewAnimation.export()
+        swiperAnmiation: MOVE_ANIMATION.export()
       })
     }
   },

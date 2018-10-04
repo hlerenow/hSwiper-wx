@@ -206,24 +206,27 @@ Component({
           })
           this.movePos(data.endX - data.startX, 'translateX')
         })
-      } else {
-        /* 垂直方向滚动 */
-        touchHandle.listen('touchup', () => {
-          this.nextView()
+        touchHandle.listen('touchend', () => {
+          this.moveViewTo(2, true)
         })
-
-        touchHandle.listen('touchdown', () => {
-          this.preView()
-        })
-        touchHandle.listen('touchmove', (data) => {
-          this.triggerEvent('move', {
-            index: this.data.nowViewDataIndex,
-            nativeEvent: data,
-            vertical: this.data.vertical
-          })
-          this.movePos(data.endY - data.startY, 'translateY')
-        })
+        return
       }
+      /* 垂直方向滚动 */
+      touchHandle.listen('touchup', () => {
+        this.nextView()
+      })
+
+      touchHandle.listen('touchdown', () => {
+        this.preView()
+      })
+      touchHandle.listen('touchmove', (data) => {
+        this.triggerEvent('move', {
+          index: this.data.nowViewDataIndex,
+          nativeEvent: data,
+          vertical: this.data.vertical
+        })
+        this.movePos(data.endY - data.startY, 'translateY')
+      })
     },
     /**
      * 动态更新指定样式属性变量的值
@@ -273,11 +276,10 @@ Component({
       this.updateDomStyle(viewBoxStyle, 'viewBoxStyle')
     },
     /* 计算可视区域元素，用于正常情况下的条状 */
-    calViasbleDataList(nowViewDataIndex) {
+    calViasbleDataList() {
       /* 区分是否支持循环滚动 */
       let res = []
-      let {dataList} = this.data
-      nowViewDataIndex = nowViewDataIndex || this.data.nowViewDataIndex
+      let {dataList, nowViewDataIndex} = this.data
       let dataCount = dataList.length
       let pre1 = (dataCount + (nowViewDataIndex - 1)) % dataCount
       let pre2 = (dataCount + (nowViewDataIndex - 2)) % dataCount
@@ -304,10 +306,6 @@ Component({
           res[4] = emptyElement
         }
       }
-      return res
-    },
-    updateVisableDataList() {
-      let res = this.calViasbleDataList()
       this.setData({
         visableDataList: res
       })
@@ -318,20 +316,23 @@ Component({
      * @param {*} useAnimation 是否启用过渡动画
      */
     moveViewTo(domIndex, useAnimation) {
+      debugger
       let {
-        vertical
+        itemWidth, itemHeight, vertical, padding, paddingX, paddingY
       } = this.data
 
+      let pos = 0
       let attr = 'translateX'
-      let pos = this.calculatePosByIndex(domIndex)
       /* 垂直方向 */
       if (vertical) {
+        pos = -domIndex * itemHeight + padding + paddingX
         attr = 'translateY'
         this.setData({
           nowTranY: pos
         })
       } else {
         /* 水平方向 */
+        pos = -domIndex * itemWidth + padding + paddingY
         attr = 'translateX'
         this.setData({
           nowTranX: pos
@@ -354,23 +355,9 @@ Component({
       let p = new Promise((resolve) => {
         setTimeout(() => {
           resolve()
-        }, DURATION + 100)
+        }, DURATION)
       })
       return p
-    },
-    calculatePosByIndex(domIndex) {
-      let {
-        itemWidth, itemHeight, vertical, padding, paddingX, paddingY
-      } = this.data
-      let pos = 0
-      /* 垂直方向 */
-      if (vertical) {
-        pos = -domIndex * itemHeight + padding + paddingX
-      } else {
-        /* 水平方向 */
-        pos = -domIndex * itemWidth + padding + paddingY
-      }
-      return pos
     },
     /* 向后一个视图 */
     nextView(useAnimation = true) {
@@ -382,7 +369,6 @@ Component({
           index: nowViewDataIndex
         })
         if (!this.data.recycle) {
-          console.log('非循环向后 moveViewTo')
           this.moveViewTo(2, useAnimation)
           return null
         }
@@ -402,23 +388,15 @@ Component({
         from: nowViewDataIndex,
         to: nowViewDataIndex + 1
       })
-      console.log('向后 moveViewTo')
       return this.moveViewTo(3, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex + 1
         let len = dataList.length
         nextIndex = Math.abs(nextIndex % len)
-        let res = this.calViasbleDataList(nextIndex)
-        let style = parseStyle(this.data.wrapperStyle)
-        let pos = this.calculatePosByIndex(2)
-        style.transform = `translateX(${pos}px) translate3d(0px, 0px, 0px)`
         this.setData({
-          nowViewDataIndex: nextIndex,
-          visableDataList: res,
-          wrapperStyle: styleStringify(style)
+          nowViewDataIndex: nextIndex
         })
-        console.log('重置 moveViewTo')
-        // return this.moveViewTo(2)
-        return null
+        this.calViasbleDataList()
+        return this.moveViewTo(2)
       }).then(() => {
         this.triggerEvent('afterViewChange', {
           index: nowViewDataIndex,
@@ -532,8 +510,7 @@ Component({
       this.setData({
         swiperAnmiation: MOVE_ANIMATION.export()
       })
-    },
-
+    }
   },
   lifetimes: {
     ready() {
@@ -542,7 +519,7 @@ Component({
       }
       this.initStruct()
       this.registerTouchEvent()
-      this.updateVisableDataList()
+      this.calViasbleDataList()
       this.moveViewTo(2)
     }
   },

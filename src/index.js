@@ -207,7 +207,7 @@ Component({
           this.movePos(data.endX - data.startX, 'translateX')
         })
         touchHandle.listen('touchend', () => {
-          this.moveViewTo(2)
+          this.moveViewTo(2, true)
         })
         return
       }
@@ -316,6 +316,7 @@ Component({
      * @param {*} useAnimation 是否启用过渡动画
      */
     moveViewTo(domIndex, useAnimation) {
+      debugger
       let {
         itemWidth, itemHeight, vertical, padding, paddingX, paddingY
       } = this.data

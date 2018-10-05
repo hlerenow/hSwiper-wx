@@ -5,7 +5,6 @@ const touchHandle = new HTouch()
 const systemInfo = wx.getSystemInfoSync()
 const SCREEN_WIDTH = systemInfo.windowWidth
 const SCREEN_HEIGHT = systemInfo.windowHeight
-const VISABLE_COUNT = 5
 /* 动画过渡时间 */
 let DURATION = 300
 let TIMEING_FUNCTION = 'ease'
@@ -206,9 +205,6 @@ Component({
           })
           this.movePos(data.endX - data.startX, 'translateX')
         })
-        touchHandle.listen('touchend', () => {
-          this.moveViewTo(2, true)
-        })
         return
       }
       /* 垂直方向滚动 */
@@ -245,11 +241,11 @@ Component({
     /* 初始化dom 结构 */
     initStruct() {
       let {
-        itemHeight, itemWidth, vertical, width, height
+        itemHeight, itemWidth, vertical, width, height, visableDataList
       } = this.data
       let h = 0
       let w = 0
-      let count = VISABLE_COUNT
+      let count = visableDataList.length
       let viewBoxStyle = {
         width: width + 'px',
         height: height + 'px'
@@ -279,32 +275,26 @@ Component({
     calViasbleDataList() {
       /* 区分是否支持循环滚动 */
       let res = []
-      let {dataList, nowViewDataIndex} = this.data
+      let {dataList} = this.data
       let dataCount = dataList.length
-      let pre1 = (dataCount + (nowViewDataIndex - 1)) % dataCount
-      let pre2 = (dataCount + (nowViewDataIndex - 2)) % dataCount
-      let next1 = (nowViewDataIndex + 1) % dataCount
-      let next2 = ((nowViewDataIndex + 2)) % dataCount
+      let pre1 = (dataCount + (0 - 1)) % dataCount
+      let pre2 = (dataCount + (0 - 2)) % dataCount
+      let next1 = (dataCount + 1) % dataCount
+      let next2 = ((dataCount + 2)) % dataCount
       res[0] = dataList[pre2]
       res[1] = dataList[pre1]
-      res[2] = dataList[nowViewDataIndex]
-      res[3] = dataList[next1]
-      res[4] = dataList[next2]
+      res = res.concat(dataList)
+      res.push(dataList[next1])
+      res.push(dataList[next2])
+      let len = res.length
       if (!this.data.recycle) {
         let emptyElement = {
           templateName: '_hswiper_emptyItem'
         }
-        if (nowViewDataIndex === 0) {
-          res[1] = emptyElement
-          res[0] = emptyElement
-        } else if (nowViewDataIndex === (dataCount - 1)) {
-          res[3] = emptyElement
-          res[4] = emptyElement
-        } else if (nowViewDataIndex === 1) {
-          res[0] = emptyElement
-        } else if (nowViewDataIndex === (dataCount - 2)) {
-          res[4] = emptyElement
-        }
+        res[1] = emptyElement
+        res[0] = emptyElement
+        res[len - 2] = emptyElement
+        res[len - 1] = emptyElement
       }
       this.setData({
         visableDataList: res
@@ -316,11 +306,21 @@ Component({
      * @param {*} useAnimation 是否启用过渡动画
      */
     moveViewTo(domIndex, useAnimation) {
-      debugger
       let {
-        itemWidth, itemHeight, vertical, padding, paddingX, paddingY
+        itemWidth, itemHeight, vertical, padding, paddingX, paddingY, recycle, visableDataList
       } = this.data
-
+      let len = visableDataList.length
+      domIndex += 2
+      if (recycle) {
+        domIndex = Math.max(domIndex, 1)
+        domIndex = Math.min(domIndex, len - 1)
+      } else {
+        domIndex = Math.max(domIndex, 2)
+        domIndex = Math.min(domIndex, len - 2)
+      }
+      if (domIndex < 2) {
+        domIndex = 2
+      }
       let pos = 0
       let attr = 'translateX'
       /* 垂直方向 */
@@ -369,7 +369,7 @@ Component({
           index: nowViewDataIndex
         })
         if (!this.data.recycle) {
-          this.moveViewTo(2, useAnimation)
+          this.moveViewTo(nowViewDataIndex, useAnimation)
           return null
         }
       }
@@ -388,15 +388,16 @@ Component({
         from: nowViewDataIndex,
         to: nowViewDataIndex + 1
       })
-      return this.moveViewTo(3, useAnimation).then(() => {
+      return this.moveViewTo(nowViewDataIndex + 1, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex + 1
         let len = dataList.length
         nextIndex = Math.abs(nextIndex % len)
         this.setData({
           nowViewDataIndex: nextIndex
         })
-        this.calViasbleDataList()
-        return this.moveViewTo(2)
+        // this.calViasbleDataList()
+        // return this.moveViewTo(2)
+        return null
       }).then(() => {
         this.triggerEvent('afterViewChange', {
           index: nowViewDataIndex,
@@ -418,7 +419,7 @@ Component({
           index: nowViewDataIndex
         })
         if (!this.data.recycle) {
-          this.moveViewTo(2, useAnimation)
+          this.moveViewTo(nowViewDataIndex, useAnimation)
           return null
         }
       }
@@ -436,15 +437,16 @@ Component({
         from: nowViewDataIndex,
         to: nowViewDataIndex - 1
       })
-      return this.moveViewTo(1, useAnimation).then(() => {
+      return this.moveViewTo(nowViewDataIndex - 1, useAnimation).then(() => {
         let nextIndex = nowViewDataIndex - 1
         let len = dataList.length
         nextIndex = Math.abs((nextIndex + len) % len)
         this.setData({
           nowViewDataIndex: nextIndex
         })
-        this.calViasbleDataList()
-        return this.moveViewTo(2)
+        // this.calViasbleDataList()
+        // return this.moveViewTo(2)
+        return null
       }).then(() => {
         this.triggerEvent('beforeViewChange', {
           index: nowViewDataIndex,
@@ -476,22 +478,22 @@ Component({
         return
       }
       let {
-        itemHeight, itemWidth, nowTranY, nowTranX
+        itemHeight, itemWidth, nowTranY, nowTranX, dataList
       } = this.data
       let nowTran = 0
       let min = 0
       let max = 0
       let maxDistance = 0
-
+      let len = dataList.length
       if (type === 'translateX') {
         nowTran = nowTranX + pos
-        max = 0
-        min = -(VISABLE_COUNT - 1) * itemWidth
+        max = itemWidth
+        min = -(len - 2) * itemWidth
         maxDistance = itemWidth
       } else {
         nowTran = nowTranY + pos
-        max = 0
-        min = -(VISABLE_COUNT - 1) * itemHeight
+        max = itemWidth
+        min = -(len - 2) * itemHeight
         maxDistance = itemHeight
       }
       maxDistance -= 10
@@ -517,10 +519,11 @@ Component({
       if (!this.data.dataList.length) {
         throw new Error('dataList 不能为空')
       }
+      this.calViasbleDataList()
       this.initStruct()
       this.registerTouchEvent()
-      this.calViasbleDataList()
-      this.moveViewTo(2)
+      this.moveViewTo(0)
+      console.log(this.data)
     }
   },
   pageLifetimes: {}

@@ -47,6 +47,7 @@ Component({
     tranforming: false
   },
   properties: {
+    /* 移动到指定试图，伴随过渡动画 */
     moveTo: {
       type: Number,
       default: 0,
@@ -54,7 +55,8 @@ Component({
         this.moveViewToAdapter(newVal, true)
       }
     },
-    moveToWithputAnimation: {
+    /* 移动到指定试图，无过渡动画 */
+    moveToWithOutAnimation: {
       type: Number,
       default: 0,
       observer(newVal) {
@@ -185,11 +187,6 @@ Component({
     recycle: {
       type: Boolean,
       value: false
-    },
-    /* 是否自动播放 */
-    autoPlay: {
-      type: Boolean,
-      default: false
     }
   },
   methods: {
@@ -527,7 +524,7 @@ Component({
       this.calViasbleDataList()
       this.initStruct()
       this.registerTouchEvent()
-      this.moveViewTo(0)
+      this.moveViewTo(this.data.nowViewDataIndex)
     }
   },
   pageLifetimes: {}

@@ -107,7 +107,6 @@
     vertical="{{false}}"
     padding="{{30}}"
     moveTo="{{moveTo}}"
-    bind:customevent="getRef"
     initIndex="{{0}}"
     width="{{320}}"
     height="{{500}}"
@@ -174,3 +173,32 @@ Page({
 })
 
 ```
+
+## 属性说明
+
+| 字段名                      | 类型     | 必填  | 描述                                      |
+| -------------------------- | ----    | ---- | ----------------------------------------- |
+| dataList                   | Array   | 是   | 需要渲染的数据         |
+| width                      | Number  | 否   | swiper 容器的宽度, 默认值为屏幕的宽度          |
+| height                     | Number  | 否   | swiper 容器的高度, 默认值为屏幕的高度          |
+| recycle                    | Boolean | 否   | 是否循环滚动， 默认值 ```false```            |
+| vertical                   | Boolean | 否   | 是否垂直滚动， 默认值 ```false```     |
+| padding                    | Number  | 否   | 该参数用于确定每个滚动元素的的宽度以及高度，每个元素的宽度为 ```width - (padding + paddingX) * 2```, 高度为```height - (padding + paddingY) * 2```, 默认值为0|
+| paddingX                   | Number  | 否   | 同上， 默认值为0                            |
+| paddingY                   | Number  | 否   | 同上， 默认值为0                            |
+| moveTo                     | Number  | 否   | 当改属性改变后， 插件会跳转到指定索引的数据视图，```0 < moveTo < dataList.length```|
+| moveToWithOutAnimation     | Number  | 否   | 同上，但无过渡动画                           |
+| initIndex                  | Number  | 否   | 插件初始化时 跳转的视图索引，默认值0                   |
+| animationType              | String  | 否   | 过渡动画类型，```['linear', 'ease-in', 'ease-in-out', 'ease-out', 'step-start', 'step-end']```之一 ,默认值 ```ease```    |
+| animationDuration          | Number  | 否   | 过渡动画时间，默认值 300     |
+
+## 事件
+bind:willFirstView="wiilFirstView"
+bind:firstView="firstView"
+bind:beforeViewChange="beforeViewChange"
+bind:afterViewChange="afterViewChange"
+bind:willLastView="willLastView"
+bind:lastView="lastView"
+bind:move="viewMove"
+dataList="{{dataList}}"
+

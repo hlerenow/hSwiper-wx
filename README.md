@@ -8,6 +8,8 @@
 
 > 使用此组件需要依赖小程序基础库 2.2.2 版本，同时依赖开发者工具的 npm 构建。具体详情可查阅[官方 npm 文档](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html)。
 
+> [旧版请参考传送](https://github.com/hlerenow/hSwiper/tree/hswiper1.0)，新版已经支持npm包安装
+
 ## 演示
 
 1. 水平

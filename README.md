@@ -5,23 +5,23 @@
 ## 演示
 1. 水平
 <br/>
-<img src="./h.gif" alt="" style="max-width:100%;width: 350px;">
+<img src="./h1.gif" width="350" style="max-width:100%;width: 350px;">
 
 2. 垂直
 <br/>
-<img src="./h.gif" alt="" style="max-width:100%;width: 350px;">
+<img src="./h1.gif" width="350"  style="max-width:100%;width: 350px;">
 
 3. 不循环
 <br/>
-<img src="./nocyle.gif" alt="" style="max-width:100%;width: 350px;">
+<img src="./nocyle1.gif" width="350"  style="max-width:100%;width: 350px;">
 
 > PS：对外暴露的 js 模块/自定义组件请放在 src 目录下，不宜放置在过深的目录。另外新增的暴露模块需要在 tools/config.js 的 entry 字段中补充，不然不会进行构建。
 
 ## 功能
 1. 支持水平，垂直滚动
 2. 支持循环无缝滚动
-3. 过渡位移效果支持自定义
-4. 过渡位移时间支持自定义
+3. 过渡位移效果支持自定义
+4. 过渡位移时间支持自定义
 5. 直接无限数量元素的滚动，而不会卡顿（未实现，待续）
 
 ## 安装

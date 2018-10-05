@@ -47,6 +47,20 @@ Component({
     tranforming: false
   },
   properties: {
+    moveTo: {
+      type: Number,
+      default: 0,
+      observer(newVal) {
+        this.moveViewToAdapter(newVal, true)
+      }
+    },
+    moveToWithputAnimation: {
+      type: Number,
+      default: 0,
+      observer(newVal) {
+        this.moveViewToAdapter(newVal)
+      }
+    },
     animationType: {
       type: String,
       default: 'ease',
@@ -142,7 +156,7 @@ Component({
       value: 0,
       observer(newVal) {
         let tempReduceDistanceX = (newVal + newVal) * 2
-        let tempReduceDistanceY = (newVal + this.data.paddingY) * 2
+        let tempReduceDistanceY = (this.data.paddingY + this.data.paddingY) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
           itemHeight: this.data.height - tempReduceDistanceY
@@ -154,8 +168,8 @@ Component({
       type: Number,
       value: 0,
       observer(newVal) {
-        let tempReduceDistanceX = (newVal + this.data.paddingY) * 2
-        let tempReduceDistanceY = (newVal + newVal) * 2
+        let tempReduceDistanceX = (this.data.padding + this.data.paddingX) * 2
+        let tempReduceDistanceY = (this.data.padding + newVal) * 2
         this.setData({
           itemWidth: this.data.width - tempReduceDistanceX,
           itemHeight: this.data.height - tempReduceDistanceY
@@ -194,14 +208,13 @@ Component({
         touchHandle.listen('touchmove', (data) => {
           /* 过渡中禁止手指滑动 */
           if (this.data.tranforming) {
-            console.log('过渡中...', this.data.tranforming)
             return
           }
-          console.log('no过渡中...', this.data.tranforming)
           this.triggerEvent('move', {
             index: this.data.nowViewDataIndex,
             nativeEvent: data,
-            vertical: this.data.vertical
+            vertical: this.data.vertical,
+            type: 'x'
           })
           this.movePos(data.endX - data.startX, 'translateX')
         })
@@ -219,7 +232,8 @@ Component({
         this.triggerEvent('move', {
           index: this.data.nowViewDataIndex,
           nativeEvent: data,
-          vertical: this.data.vertical
+          vertical: this.data.vertical,
+          type: 'x'
         })
         this.movePos(data.endY - data.startY, 'translateY')
       })
@@ -358,94 +372,75 @@ Component({
     },
     /* 向后一个视图 */
     nextView(useAnimation = true) {
-      let {nowViewDataIndex, dataList} = this.data
-      let len = dataList.length
+      let {nowViewDataIndex} = this.data
       let nextIndex = nowViewDataIndex + 1
-      nextIndex = Math.abs((nextIndex + len) % len)
-      /* 当前是否已经是第一个 */
-      if (nowViewDataIndex === (len - 1)) {
-        this.triggerEvent('alreadyLastView', {
-          index: nowViewDataIndex
-        })
-        if (!this.data.recycle) {
-          this.moveViewTo(nowViewDataIndex, useAnimation)
-          return null
-        }
-      }
-      if (!this.canTransforming()) {
-        return null
-      }
-
-      if (nextIndex === (len - 1)) {
-        this.triggerEvent('wiilLastView', {
-          index: nowViewDataIndex
-        })
-      }
-      this.triggerEvent('beforeViewChange', {
-        index: nowViewDataIndex,
-        from: nowViewDataIndex,
-        to: nextIndex
-      })
-      return this.moveViewTo(nowViewDataIndex + 1, useAnimation).then(() => {
-        let isReset = false
-        if ((nowViewDataIndex + 1) >= len) {
-          isReset = true
-        }
-        this.setData({
-          nowViewDataIndex: nextIndex
-        })
-
-        if (isReset) {
-          this.moveViewTo(nextIndex)
-        }
-        return null
-      }).then(() => {
-        this.triggerEvent('beforeViewChange', {
-          index: nextIndex,
-          from: nowViewDataIndex,
-          to: nextIndex
-        })
-        this.setData({
-          tranforming: false
-        })
-        return null
-      })
+      this.moveViewToAdapter(nextIndex, useAnimation)
     },
     /* 向前一个视图 */
     preView(useAnimation = true) {
-      let {nowViewDataIndex, dataList} = this.data
-      let len = dataList.length
+      let {nowViewDataIndex} = this.data
       let nextIndex = nowViewDataIndex - 1
-      nextIndex = Math.abs((nextIndex + len) % len)
-      /* 当前是否已经是第一个 */
-      if (nowViewDataIndex === 0) {
-        this.triggerEvent('alreadyFirstView', {
-          index: nowViewDataIndex
-        })
-        if (!this.data.recycle) {
-          this.moveViewTo(nowViewDataIndex, useAnimation)
-          return null
-        }
-      }
+      this.moveViewToAdapter(nextIndex, useAnimation)
+    },
+    moveViewToAdapter(nextIndex, useAnimation) {
+      /* 是否可以进行过渡 */
       if (!this.canTransforming()) {
         return null
       }
+      let {nowViewDataIndex, dataList} = this.data
+      let len = dataList.length
+      let originNextIndex = nextIndex
+      nextIndex = Math.abs((nextIndex + len) % len)
+      /* 当前是否已经是最后一个 */
+      if (!this.data.recycle) {
+        if (nowViewDataIndex === (len - 1)) {
+          this.triggerEvent('alreadyLastView', {
+            index: nowViewDataIndex,
+            item: dataList[nowViewDataIndex]
+          })
+          this.moveViewTo(nowViewDataIndex, useAnimation)
+          return null
+        }
 
-      if ((nowViewDataIndex - 1) === 0) {
-        this.triggerEvent('wiilFirstView', {
-          index: nowViewDataIndex
+        /* 当前是否已经是第一个 */
+        if (nowViewDataIndex === 0) {
+          this.triggerEvent('alreadyFirstView', {
+            index: nowViewDataIndex,
+            item: dataList[nowViewDataIndex]
+          })
+        }
+      }
+
+      if (nextIndex === 0) {
+        this.triggerEvent('firstView', {
+          index: nowViewDataIndex,
+          item: dataList[nowViewDataIndex]
         })
       }
+
+      if (nextIndex === (len - 1)) {
+        this.triggerEvent('lastView', {
+          index: nowViewDataIndex,
+          item: dataList[nowViewDataIndex]
+        })
+      }
+
       this.triggerEvent('beforeViewChange', {
         index: nowViewDataIndex,
         from: nowViewDataIndex,
-        to: nextIndex
+        to: nextIndex,
+        item: dataList[nowViewDataIndex]
       })
-      return this.moveViewTo(nowViewDataIndex - 1, useAnimation).then(() => {
+
+      return this.moveViewTo(originNextIndex, useAnimation).then(() => {
         let isReset = false
-        if ((nowViewDataIndex - 1) < 0) {
+        if ((originNextIndex) < 0) {
           isReset = true
         }
+        if ((originNextIndex) >= dataList.length) {
+          isReset = true
+        }
+
         this.setData({
           nowViewDataIndex: nextIndex
         })
@@ -454,10 +449,11 @@ Component({
         }
         return null
       }).then(() => {
-        this.triggerEvent('beforeViewChange', {
+        this.triggerEvent('afterViewChange', {
           index: nextIndex,
           from: nowViewDataIndex,
-          to: nextIndex
+          to: nextIndex,
+          item: dataList[nextIndex]
         })
         this.setData({
           tranforming: false
@@ -529,7 +525,6 @@ Component({
       this.initStruct()
       this.registerTouchEvent()
       this.moveViewTo(0)
-      console.log(this.data)
     }
   },
   pageLifetimes: {}

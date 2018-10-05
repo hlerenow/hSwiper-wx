@@ -1,0 +1,24 @@
+.imgBox {
+  padding: 10px 10px;
+  box-sizing: border-box;
+  flex: 1;
+  justify-content: center;
+  align-items: center
+}
+
+.imgBorder {
+  border: 1px solid #eee;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+}
+
+.imgOmg {
+  display: block;
+  width: 80%;
+  height: 80%;
+  border-radius: 6px;
+}

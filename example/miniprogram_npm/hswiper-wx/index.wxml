@@ -1,0 +1,31 @@
+<import src="/hSwiper/swiperTemplate.wxml"/>
+
+<view class="hSwiper"
+  bindtouchstart="touchstart"
+  bindtouchmove="touchmove"
+  bindtouchend="touchend"
+  style="{{viewBoxStyle}}"
+>
+  <view class="hSwiperCon"
+        animation="{{swiperAnmiation}}"
+        style="{{wrapperStyle}}" >
+        <block wx:for="{{visableDataList}}" wx:key="index" >
+            <view class="item" style="{{itemStyle}}">
+                <template is="{{item.templateName || templateName}}" data="{{item, index}}"></template>
+            </view>
+        </block>
+  </view>
+</view>
+
+
+<template name="_hswiper_emptyItem">
+  <view style="width: 100%; height: 100%;">
+  </view>
+</template>
+
+<template name="_hswiper_emptyItem_default">
+  <view style="width: 100%; height: 100%;">
+      请编写自己的wxml模版，这是默认模版
+  </view>
+</template>
+

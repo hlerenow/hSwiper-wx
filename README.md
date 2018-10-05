@@ -5,19 +5,23 @@
 [![Version](https://img.shields.io/npm/v/hswiper-wx.svg)](https://www.npmjs.com/package/hswiper-wx)
 [![npm](https://img.shields.io/npm/dt/hswiper-wx.svg)](https://www.npmjs.com/package/hswiper-wx)
 
+
+> 使用此组件需要依赖小程序基础库 2.2.2 版本，同时依赖开发者工具的 npm 构建。具体详情可查阅[官方 npm 文档](https://developers.weixin.qq.com/miniprogram/dev/devtools/npm.html)。
+
 ## 演示
 
 1. 水平
 <br/>
-<img src="./h1.gif" width="350" style="max-width:100%;width: 350px;">
+<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/h1.gif" width="350" style="max-width:100%;width: 350px;">
 
 2. 垂直
 <br/>
-<img src="./v1.gif" width="350"  style="max-width:100%;width: 350px;">
+<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/v1.gif" width="350"  style="max-width:100%;width: 350px;">
 
 3. 不循环
 <br/>
-<img src="./nocyle1.gif" width="350"  style="max-width:100%;width: 350px;">
+<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/nocyle1.gif" width="350"  style="max-width:100%;width: 350px;">
+
 
 ## 功能
 1. 支持水平，垂直滚动
@@ -33,7 +37,7 @@
   npm install --save hswiper-wx
 ```
 
-
+## 小程序npm构建参考
 
 ## 使用
 

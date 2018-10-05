@@ -1,0 +1,25 @@
+<View style="width: 320px; height: 500px"
+    class="swiper"
+>
+  <comp
+    recycle="{{recyle}}"
+    vertical="{{false}}"
+    templateName="hSwiperItem"
+    padding="{{30}}"
+    moveTo="{{moveTo}}"
+    bind:customevent="getRef"
+    initIndex="{{2}}"
+    width="{{320}}"
+    height="{{500}}"
+    animationType="ease-out"
+    animationDuration="300"
+    bind:firstView="firstView"
+    bind:alreadyFirstView="alreadyFirstView"
+    bind:beforeViewChange="beforeViewChange"
+    bind:afterViewChange="afterViewChange"
+    bind:lastView="lastView"
+    bind:alreadyLastView="alreadyLastView"
+    bind:move="viewMove"
+    dataList="{{dataList}}"
+  ></comp>
+</View>

@@ -1,0 +1,5 @@
+.swiper {
+  border: 1px solid #efefef;
+  margin: 0 auto;
+  margin-top: 30px;
+}

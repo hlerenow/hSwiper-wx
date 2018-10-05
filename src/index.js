@@ -94,7 +94,7 @@ Component({
     },
     templateName: {
       type: String,
-      value: 'hSwiperItem'
+      value: '_hswiper_emptyItem_default'
     },
     /* 传入的数据 */
     dataList: {

@@ -23,3 +23,9 @@
   </view>
 </template>
 
+<template name="_hswiper_emptyItem_default">
+  <view style="width: 100%; height: 100%;">
+      请编写自己的wxml模版，这是默认模版
+  </view>
+</template>
+

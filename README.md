@@ -9,7 +9,7 @@
 
 2. 垂直
 <br/>
-<img src="./h1.gif" width="350"  style="max-width:100%;width: 350px;">
+<img src="./v1.gif" width="350"  style="max-width:100%;width: 350px;">
 
 3. 不循环
 <br/>
@@ -43,7 +43,7 @@
 2. 在项目根目录下创建如下目录文件
 ```
   --hSwiper
-      --swiperTemplate.wxml --
+      --swiperTemplate.wxml
       --swiperTemplate.wxss
 ```
 
@@ -105,24 +105,25 @@
   <comp
     recycle="{{recyle}}"
     vertical="{{false}}"
+    templateName="hSwiperItem"
     padding="{{30}}"
     moveTo="{{moveTo}}"
-    initIndex="{{0}}"
+    bind:customevent="getRef"
+    initIndex="{{2}}"
     width="{{320}}"
     height="{{500}}"
     animationType="ease-out"
     animationDuration="300"
-    bind:willFirstView="wiilFirstView"
     bind:firstView="firstView"
+    bind:alreadyFirstView="alreadyFirstView"
     bind:beforeViewChange="beforeViewChange"
     bind:afterViewChange="afterViewChange"
-    bind:willLastView="willLastView"
     bind:lastView="lastView"
+    bind:alreadyLastView="alreadyLastView"
     bind:move="viewMove"
     dataList="{{dataList}}"
   ></comp>
 </View>
-
 ```
 
 ```javascript
@@ -149,8 +150,8 @@ Page({
       }, 1000)
     }
   },
-  wiilFirstView(e) {
-    console.log('wiilFirstView', e)
+  alreadyFirstView(e) {
+    console.log('alreadyFirstView', e)
   },
   firstView(e) {
     console.log('firstView', e)
@@ -161,23 +162,23 @@ Page({
   afterViewChange(e) {
     console.log('afterViewChange', e)
   },
-  willLastView(e) {
-    console.log('willLastView', e)
-  },
   lastView(e) {
     console.log('lastView', e)
+  },
+  alreadyLastView(e) {
+    console.log('alreadyLastView', e)
   },
   viewMove(e) {
     // console.log('viewMove', e)
   }
 })
-
 ```
 
 ## 属性说明
 
 | 字段名                      | 类型     | 必填  | 描述                                      |
 | -------------------------- | ----    | ---- | ----------------------------------------- |
+|templateName                | String  | 否   | item对应的模版名称。全局设置，默认值为 _hswiper_emptyItem_default, 全局的，如果每个item需要使用不同的模版，可以在item中增加 templateName 属性值，该值会覆盖全局的  templateName   |
 | dataList                   | Array   | 是   | 需要渲染的数据         |
 | width                      | Number  | 否   | swiper 容器的宽度, 默认值为屏幕的宽度          |
 | height                     | Number  | 否   | swiper 容器的高度, 默认值为屏幕的高度          |
@@ -192,13 +193,17 @@ Page({
 | animationType              | String  | 否   | 过渡动画类型，```['linear', 'ease-in', 'ease-in-out', 'ease-out', 'step-start', 'step-end']```之一 ,默认值 ```ease```    |
 | animationDuration          | Number  | 否   | 过渡动画时间，默认值 300     |
 
-## 事件
-bind:willFirstView="wiilFirstView"
-bind:firstView="firstView"
-bind:beforeViewChange="beforeViewChange"
-bind:afterViewChange="afterViewChange"
-bind:willLastView="willLastView"
-bind:lastView="lastView"
-bind:move="viewMove"
-dataList="{{dataList}}"
 
+## 事件
+
+| 事件名                      | 描述                                      |
+| ---                        |------                                    |
+| firstView                  | 当跳转到的视图是第一个视图时触发              |
+| alreadyFirstView           | 非循环模式下，重复跳转到的视图是第一个视图时触发 |
+| beforeViewChange           | 视图跳转前触发                             |
+| afterViewChange            | 视图跳转前触发                             |
+| lastView                   | 当跳转到的视图是最后个视图时触发              |
+| alreadyLastView            | 非循环模式下，重复跳转到的视图是最后个视图时触发 |
+| move                       | 视图移动时触发                             |
+
+## 具体使用 可查看example文件夹下的例子，有注释说明。欢迎提问！！！

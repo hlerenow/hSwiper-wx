@@ -1,7 +1,7 @@
 {
-  "name": "hSwiper-wx",
-  "version": "2.0.0",
-  "description": "",
+  "name": "hswiper-wx",
+  "version": "0.0.1",
+  "description": "微信小程序swiper插件",
   "main": "miniprogram_dist/index.js",
   "scripts": {
     "dev": "gulp dev --develop",

@@ -383,17 +383,13 @@ Component({
       this.moveViewToAdapter(nextIndex, useAnimation)
     },
     moveViewToAdapter(nextIndex, useAnimation) {
-      /* 是否可以进行过渡 */
-      if (!this.canTransforming()) {
-        return null
-      }
       let {nowViewDataIndex, dataList} = this.data
       let len = dataList.length
       let originNextIndex = nextIndex
       nextIndex = Math.abs((nextIndex + len) % len)
       /* 当前是否已经是最后一个 */
       if (!this.data.recycle) {
-        if (nowViewDataIndex === (len - 1)) {
+        if (nowViewDataIndex === (len - 1) && originNextIndex >= len) {
           this.triggerEvent('alreadyLastView', {
             index: nowViewDataIndex,
             item: dataList[nowViewDataIndex]
@@ -403,12 +399,19 @@ Component({
         }
 
         /* 当前是否已经是第一个 */
-        if (nowViewDataIndex === 0) {
+        if (nowViewDataIndex === 0 && originNextIndex < 0) {
           this.triggerEvent('alreadyFirstView', {
             index: nowViewDataIndex,
             item: dataList[nowViewDataIndex]
           })
+          this.moveViewTo(nowViewDataIndex, useAnimation)
+          return null
         }
+      }
+
+      /* 是否可以进行过渡 */
+      if (!this.canTransforming()) {
+        return null
       }
 
       if (nextIndex === 0) {

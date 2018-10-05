@@ -279,8 +279,8 @@ Component({
       let dataCount = dataList.length
       let pre1 = (dataCount + (0 - 1)) % dataCount
       let pre2 = (dataCount + (0 - 2)) % dataCount
-      let next1 = (dataCount + 1) % dataCount
-      let next2 = ((dataCount + 2)) % dataCount
+      let next1 = (dataCount) % dataCount
+      let next2 = ((dataCount + 1)) % dataCount
       res[0] = dataList[pre2]
       res[1] = dataList[pre1]
       res = res.concat(dataList)
@@ -317,9 +317,6 @@ Component({
       } else {
         domIndex = Math.max(domIndex, 2)
         domIndex = Math.min(domIndex, len - 2)
-      }
-      if (domIndex < 2) {
-        domIndex = 2
       }
       let pos = 0
       let attr = 'translateX'
@@ -363,9 +360,11 @@ Component({
     nextView(useAnimation = true) {
       let {nowViewDataIndex, dataList} = this.data
       let len = dataList.length
-      /* 当前是否已经是最后一个 */
+      let nextIndex = nowViewDataIndex + 1
+      nextIndex = Math.abs((nextIndex + len) % len)
+      /* 当前是否已经是第一个 */
       if (nowViewDataIndex === (len - 1)) {
-        this.triggerEvent('lastView', {
+        this.triggerEvent('alreadyLastView', {
           index: nowViewDataIndex
         })
         if (!this.data.recycle) {
@@ -377,32 +376,34 @@ Component({
         return null
       }
 
-      if ((nowViewDataIndex + 1) === (len - 1)) {
-        this.triggerEvent('willLastView', {
+      if (nextIndex === (len - 1)) {
+        this.triggerEvent('wiilLastView', {
           index: nowViewDataIndex
         })
       }
-
       this.triggerEvent('beforeViewChange', {
         index: nowViewDataIndex,
         from: nowViewDataIndex,
-        to: nowViewDataIndex + 1
+        to: nextIndex
       })
       return this.moveViewTo(nowViewDataIndex + 1, useAnimation).then(() => {
-        let nextIndex = nowViewDataIndex + 1
-        let len = dataList.length
-        nextIndex = Math.abs(nextIndex % len)
+        let isReset = false
+        if ((nowViewDataIndex + 1) >= len) {
+          isReset = true
+        }
         this.setData({
           nowViewDataIndex: nextIndex
         })
-        // this.calViasbleDataList()
-        // return this.moveViewTo(2)
+
+        if (isReset) {
+          this.moveViewTo(nextIndex)
+        }
         return null
       }).then(() => {
-        this.triggerEvent('afterViewChange', {
-          index: nowViewDataIndex,
+        this.triggerEvent('beforeViewChange', {
+          index: nextIndex,
           from: nowViewDataIndex,
-          to: nowViewDataIndex + 1
+          to: nextIndex
         })
         this.setData({
           tranforming: false
@@ -413,9 +414,12 @@ Component({
     /* 向前一个视图 */
     preView(useAnimation = true) {
       let {nowViewDataIndex, dataList} = this.data
+      let len = dataList.length
+      let nextIndex = nowViewDataIndex - 1
+      nextIndex = Math.abs((nextIndex + len) % len)
       /* 当前是否已经是第一个 */
       if (nowViewDataIndex === 0) {
-        this.triggerEvent('firstView', {
+        this.triggerEvent('alreadyFirstView', {
           index: nowViewDataIndex
         })
         if (!this.data.recycle) {
@@ -435,23 +439,25 @@ Component({
       this.triggerEvent('beforeViewChange', {
         index: nowViewDataIndex,
         from: nowViewDataIndex,
-        to: nowViewDataIndex - 1
+        to: nextIndex
       })
       return this.moveViewTo(nowViewDataIndex - 1, useAnimation).then(() => {
-        let nextIndex = nowViewDataIndex - 1
-        let len = dataList.length
-        nextIndex = Math.abs((nextIndex + len) % len)
+        let isReset = false
+        if ((nowViewDataIndex - 1) < 0) {
+          isReset = true
+        }
         this.setData({
           nowViewDataIndex: nextIndex
         })
-        // this.calViasbleDataList()
-        // return this.moveViewTo(2)
+        if (isReset) {
+          this.moveViewTo(nextIndex)
+        }
         return null
       }).then(() => {
         this.triggerEvent('beforeViewChange', {
-          index: nowViewDataIndex,
+          index: nextIndex,
           from: nowViewDataIndex,
-          to: nowViewDataIndex - 1
+          to: nextIndex
         })
         this.setData({
           tranforming: false

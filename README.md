@@ -4,14 +4,16 @@
 
 ## 演示
 1. 水平
-![](./h.gif)
+<br/>
+<img src="./h.gif" alt="" style="max-width:100%;width: 350px;">
 
 2. 垂直
-![](./v.gif)
+<br/>
+<img src="./h.gif" alt="" style="max-width:100%;width: 350px;">
 
 3. 不循环
-![](./nocyle.gif)
-
+<br/>
+<img src="./nocyle.gif" alt="" style="max-width:100%;width: 350px;">
 
 > PS：对外暴露的 js 模块/自定义组件请放在 src 目录下，不宜放置在过深的目录。另外新增的暴露模块需要在 tools/config.js 的 entry 字段中补充，不然不会进行构建。
 

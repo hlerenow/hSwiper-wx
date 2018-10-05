@@ -1,6 +1,6 @@
 {
   "name": "hswiper-wx",
-  "version": "0.0.4",
+  "version": "2.0.0",
   "description": "微信小程序swiper插件",
   "main": "miniprogram_dist/index.js",
   "scripts": {

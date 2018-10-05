@@ -12,15 +12,15 @@
 
 1. 水平
 <br/>
-<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/h1.gif" width="350" style="max-width:100%;width: 350px;">
+<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/h1.gif?raw=true" width="350" style="max-width:100%;width: 350px;">
 
 2. 垂直
 <br/>
-<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/v1.gif" width="350"  style="max-width:100%;width: 350px;">
+<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/v1.gif?raw=true" width="350"  style="max-width:100%;width: 350px;">
 
 3. 不循环
 <br/>
-<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/nocyle1.gif" width="350"  style="max-width:100%;width: 350px;">
+<img src="https://github.com/hlerenow/hSwiper/blob/hSwiper-2.0/nocyle1.gif?raw=true" width="350"  style="max-width:100%;width: 350px;">
 
 
 ## 功能

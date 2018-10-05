@@ -1,8 +1,12 @@
 # hSwiper-wx
 小程序swiper组件
 
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+[![Version](https://img.shields.io/npm/v/hswiper-wx.svg)](https://www.npmjs.com/package/hswiper-wx)
+[![npm](https://img.shields.io/npm/dt/hswiper-wx.svg)](https://www.npmjs.com/package/hswiper-wx)
 
 ## 演示
+
 1. 水平
 <br/>
 <img src="./h1.gif" width="350" style="max-width:100%;width: 350px;">
@@ -22,11 +26,14 @@
 4. 过渡位移时间支持自定义
 5. ~~支持无限元素的滚动，而不会卡顿（未实现，待续...)~~
 
+
 ## 安装
 
 ```javascript
   npm install --save hswiper-wx
 ```
+
+
 
 ## 使用
 
@@ -174,6 +181,9 @@ Page({
 })
 ```
 
+
+
+
 ## 属性说明
 
 | 字段名                      | 类型     | 必填  | 描述                                      |
@@ -194,6 +204,9 @@ Page({
 | animationDuration          | Number  | 否   | 过渡动画时间，默认值 300     |
 
 
+
+
+
 ## 事件
 
 | 事件名                      | 描述                                      |
@@ -205,5 +218,12 @@ Page({
 | lastView                   | 当跳转到的视图是最后个视图时触发              |
 | alreadyLastView            | 非循环模式下，重复跳转到的视图是最后个视图时触发 |
 | move                       | 视图移动时触发                             |
+
+
+
+
+
+------------
+
 
 ## 具体使用 可查看example文件夹下的例子，有注释说明。欢迎提问！！！

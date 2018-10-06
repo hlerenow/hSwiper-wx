@@ -39,7 +39,6 @@
   npm install --save hswiper-wx
 ```
 
-## 小程序npm构建参考
 
 ## 使用
 

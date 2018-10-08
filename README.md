@@ -42,7 +42,7 @@
 
 ## 使用
 
-1. 在页面的 json 配置文件中添加 recycle-view 和 recycle-item 自定义组件的配置
+1. 在页面的 json 配置文件中添加 ```hswiper-wx``` 自定义组件的配置
 
 ```json
   {

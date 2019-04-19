@@ -133,6 +133,7 @@
     bind:lastView="lastView"
     bind:alreadyLastView="alreadyLastView"
     bind:move="viewMove"
+    bind:onTap="onTap"
     dataList="{{dataList}}"
   ></comp>
 </View>
@@ -181,8 +182,11 @@ Page({
     console.log('alreadyLastView', e)
   },
   viewMove(e) {
-    // console.log('viewMove', e)
-  }
+    console.log('viewMove', e)
+  },
+  onTap(e) {
+    console.log(e, '监听到了 tap')
+  }  
 })
 ```
 

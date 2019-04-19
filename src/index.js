@@ -514,6 +514,13 @@ Component({
       this.setData({
         swiperAnmiation: MOVE_ANIMATION.export()
       })
+    },
+    onTap(e) {
+      this.triggerEvent('onTap', {
+        index: this.data.nowViewDataIndex,
+        itemData: this.data.dataList[this.data.nowViewDataIndex],
+        nativeEvent: e
+      })
     }
   },
   lifetimes: {

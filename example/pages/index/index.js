@@ -39,6 +39,9 @@ Page({
     console.log('alreadyLastView', e)
   },
   viewMove(e) {
-    // console.log('viewMove', e)
+    console.log('viewMove', e)
+  },
+  onTap(e) {
+    console.log(e, '监听到了 tap')
   }
 })

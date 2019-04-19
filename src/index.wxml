@@ -10,7 +10,7 @@
         animation="{{swiperAnmiation}}"
         style="{{wrapperStyle}}" >
         <block wx:for="{{visableDataList}}" wx:key="index" >
-            <view class="item" style="{{itemStyle}}">
+            <view class="item" style="{{itemStyle}}" bindtap="onTap">
                 <template is="{{item.templateName || templateName}}" data="{{item, index}}"></template>
             </view>
         </block>

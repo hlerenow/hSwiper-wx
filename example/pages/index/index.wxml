@@ -20,6 +20,7 @@
     bind:lastView="lastView"
     bind:alreadyLastView="alreadyLastView"
     bind:move="viewMove"
+    bind:onTap="onTap"
     dataList="{{dataList}}"
   ></comp>
 </View>

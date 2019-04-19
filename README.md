@@ -222,7 +222,8 @@ Page({
 | afterViewChange            | 视图跳转前触发                             |
 | lastView                   | 当跳转到的视图是最后个视图时触发              |
 | alreadyLastView            | 非循环模式下，重复跳转到的视图是最后个视图时触发 |
-| move                       | 视图移动时触发                             |
+| move                       | 视图移动时触发                              |
+| onTap                      | 点击每个item时触发                          |
 
 
 
